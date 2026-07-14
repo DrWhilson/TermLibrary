@@ -49,10 +49,10 @@ class Program
             {
                 var random = new Random();
                 const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var text = new char[100];
-                for (int i = 0; i < 100; i++)
+                var text = new char[1100];
+                for (int i = 0; i < 1100; i++)
                     text[i] = chars[random.Next(chars.Length)];
-                Console.WriteLine("\n" + new string(text));
+                RoomRenderer.ShowBookPage(new string(text), random.Next(1, 999));
                 Console.WriteLine("\nНажмите Enter...");
                 Console.ReadLine();
             }

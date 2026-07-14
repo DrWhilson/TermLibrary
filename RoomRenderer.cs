@@ -2,13 +2,58 @@ namespace libraryNodes
 {
     public static class RoomRenderer
     {
+        public static void ShowBookPage(string text, int pageNumber)
+        {
+            const int lineWidth = 44;
+            const int pad = 2;
+            int innerWidth = lineWidth + pad * 2;
+
+            string[] lines = new string[25];
+            for (int i = 0; i < 25; i++)
+            {
+                int start = i * lineWidth;
+                if (start < text.Length)
+                {
+                    int len = Math.Min(lineWidth, text.Length - start);
+                    lines[i] = text.Substring(start, len).PadRight(lineWidth);
+                }
+                else
+                {
+                    lines[i] = new string(' ', lineWidth);
+                }
+            }
+
+            string pageStr = $"\u2500\u2500 \u0441\u0442\u0440. {pageNumber} \u2500\u2500";
+            int leftPad = (lineWidth - pageStr.Length) / 2;
+            int rightPad = lineWidth - pageStr.Length - leftPad;
+
+            Console.WriteLine("\u250c" + new string('\u2500', innerWidth) + "\u2510");
+            Console.WriteLine("\u2502" + new string(' ', innerWidth) + "\u2502");
+            for (int i = 0; i < 25; i++)
+                Console.WriteLine(
+                    "\u2502" + new string(' ', pad) + lines[i] + new string(' ', pad) + "\u2502"
+                );
+            Console.WriteLine("\u2502" + new string(' ', innerWidth) + "\u2502");
+            Console.WriteLine(
+                "\u2502"
+                    + new string(' ', pad)
+                    + new string(' ', leftPad)
+                    + pageStr
+                    + new string(' ', rightPad)
+                    + new string(' ', pad)
+                    + "\u2502"
+            );
+            Console.WriteLine("\u2502" + new string(' ', innerWidth) + "\u2502");
+            Console.WriteLine("\u2514" + new string('\u2500', innerWidth) + "\u2518");
+        }
+
         public static void Render(HexNode node)
-    {
-        Console.Clear();
-        DrawRoom(node);
-        DrawExits(node);
-        DrawActions(node);
-    }
+        {
+            Console.Clear();
+            DrawRoom(node);
+            DrawExits(node);
+            DrawActions(node);
+        }
 
         private static void DrawRoom(HexNode node)
         {
