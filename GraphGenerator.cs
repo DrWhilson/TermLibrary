@@ -8,13 +8,6 @@ namespace libraryNodes
         private readonly List<HexNode> _allNodes;
         private readonly Dictionary<HexCoord, HexNode> _coordToNode;
 
-        private static readonly (NodeType type, double weight)[] TypeWeights =
-        [
-            (NodeType.HexRoom, 0.30),
-            (NodeType.Passage, 0.50),
-            (NodeType.DeadEnd, 0.20),
-        ];
-
         public IReadOnlyList<HexNode> AllNodes => _allNodes;
 
         public GraphGenerator(int? seed = null, int maxNodes = 100)
@@ -53,7 +46,7 @@ namespace libraryNodes
 
                 if (_coordToNode.TryGetValue(coord, out var existing))
                 {
-                    if (existing.CanAddNeighbor())
+                    if (existing.CanAddNeighbor() && CanConnectTypes(node, existing))
                     {
                         node.Neighbors.Add(existing);
                         existing.Neighbors.Add(node);
@@ -64,7 +57,7 @@ namespace libraryNodes
                     if (_allNodes.Count >= _maxNodes)
                         continue;
 
-                    var newNode = CreateRandomNode(coord);
+                    var newNode = CreateRandomNode(coord, node.NodeType);
                     _allNodes.Add(newNode);
                     _coordToNode[coord] = newNode;
 
@@ -103,7 +96,7 @@ namespace libraryNodes
                 if (alreadyConnected)
                     continue;
 
-                if (_rng.NextDouble() < 0.4)
+                if (_rng.NextDouble() < 0.4 && CanConnectTypes(node, existing))
                 {
                     node.Neighbors.Add(existing);
                     existing.Neighbors.Add(node);
@@ -111,17 +104,15 @@ namespace libraryNodes
             }
         }
 
-        private HexNode CreateRandomNode(HexCoord coord)
+        private HexNode CreateRandomNode(HexCoord coord, NodeType parentType)
         {
-            double roll = _rng.NextDouble();
-            double cumulative = 0;
-            foreach (var (type, weight) in TypeWeights)
+            NodeType type = parentType switch
             {
-                cumulative += weight;
-                if (roll <= cumulative)
-                    return new HexNode(_nextId++, type, coord);
-            }
-            return new HexNode(_nextId++, NodeType.Passage, coord);
+                NodeType.HexRoom => _rng.NextDouble() < 0.6 ? NodeType.Passage : NodeType.DeadEnd,
+                NodeType.Passage => NodeType.HexRoom,
+                _ => NodeType.Passage
+            };
+            return new HexNode(_nextId++, type, coord);
         }
 
         private List<int> GetFreeDirections(HexNode node)
@@ -151,6 +142,13 @@ namespace libraryNodes
                 if (((HexNode)n).Coord == coord)
                     return true;
             return false;
+        }
+
+        private static bool CanConnectTypes(HexNode a, HexNode b)
+        {
+            if (a.NodeType == NodeType.HexRoom && b.NodeType == NodeType.HexRoom)
+                return false;
+            return true;
         }
 
         private void Shuffle<T>(IList<T> list)
