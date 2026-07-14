@@ -11,6 +11,8 @@ namespace libraryNodes
 
         private static void DrawRoom(HexNode node)
         {
+            Console.WriteLine("  Координаты: {0}\n", node.Coord);
+
             switch (node.NodeType)
             {
                 case NodeType.HexRoom:
@@ -63,7 +65,7 @@ namespace libraryNodes
             for (int i = 0; i < node.Neighbors.Count; i++)
             {
                 var neighbor = (HexNode)node.Neighbors[i];
-                Console.WriteLine("  {0}) [{1}] {2}", i + 1, neighbor.Id, neighbor.NodeType);
+                Console.WriteLine("  {0}) [{1}] {2}  {3}", i + 1, neighbor.Id, neighbor.NodeType, neighbor.Coord);
             }
         }
     }

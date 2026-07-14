@@ -6,11 +6,13 @@ namespace libraryNodes
     {
         public NodeType NodeType { get; set; }
         public int MaxNeighbors => MaxNeighbors(NodeType);
+        public HexCoord Coord { get; set; }
 
-        public HexNode(int id, NodeType type)
+        public HexNode(int id, NodeType type, HexCoord coord)
             : base(id, type.ToString())
         {
             NodeType = type;
+            Coord = coord;
         }
 
         public bool CanAddNeighbor() => Neighbors.Count < MaxNeighbors;

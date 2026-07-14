@@ -6,6 +6,7 @@ namespace libraryNodes
         private readonly int _maxNodes;
         private int _nextId;
         private readonly List<HexNode> _allNodes;
+        private readonly Dictionary<HexCoord, HexNode> _coordToNode;
 
         private static readonly (NodeType type, double weight)[] TypeWeights =
         [
@@ -22,12 +23,14 @@ namespace libraryNodes
             _maxNodes = maxNodes;
             _nextId = 1;
             _allNodes = new List<HexNode>();
+            _coordToNode = new Dictionary<HexCoord, HexNode>();
         }
 
         public HexNode CreateStartNode()
         {
-            var start = new HexNode(0, NodeType.HexRoom);
+            var start = new HexNode(0, NodeType.HexRoom, new HexCoord(0, 0));
             _allNodes.Add(start);
+            _coordToNode[new HexCoord(0, 0)] = start;
             return start;
         }
 
@@ -35,44 +38,80 @@ namespace libraryNodes
         {
             if (depth <= 0) return;
 
-            int openSlots = node.MaxNeighbors - node.Neighbors.Count;
-            int canAdd = Math.Min(openSlots, _maxNodes - _allNodes.Count);
+            var freeDirs = GetFreeDirections(node);
+            Shuffle(freeDirs);
 
-            var newNodes = new List<HexNode>();
-            for (int i = 0; i < canAdd; i++)
+            foreach (var dir in freeDirs)
             {
-                var newNode = CreateRandomNode();
-                _allNodes.Add(newNode);
-                node.Neighbors.Add(newNode);
-                newNode.Neighbors.Add(node);
-                newNodes.Add(newNode);
-            }
+                if (!node.CanAddNeighbor())
+                    break;
 
-            foreach (var n in newNodes)
-                ExpandDepth(n, depth - 1);
+                var coord = node.Coord.Neighbor(dir);
+
+                if (HasNeighborAt(node, coord))
+                    continue;
+
+                if (_coordToNode.TryGetValue(coord, out var existing))
+                {
+                    if (existing.CanAddNeighbor())
+                    {
+                        node.Neighbors.Add(existing);
+                        existing.Neighbors.Add(node);
+                    }
+                }
+                else
+                {
+                    if (_allNodes.Count >= _maxNodes)
+                        continue;
+
+                    var newNode = CreateRandomNode(coord);
+                    _allNodes.Add(newNode);
+                    _coordToNode[coord] = newNode;
+
+                    node.Neighbors.Add(newNode);
+                    newNode.Neighbors.Add(node);
+
+                    TryConnectExisting(newNode);
+
+                    ExpandDepth(newNode, depth - 1);
+                }
+            }
         }
 
-        public int ExpandNode(HexNode node, int count)
+        private void TryConnectExisting(HexNode node)
         {
-            int added = 0;
-            int openSlots = node.MaxNeighbors - node.Neighbors.Count;
-            int canAdd = Math.Min(Math.Min(count, openSlots), _maxNodes - _allNodes.Count);
-
-            for (int i = 0; i < canAdd; i++)
+            for (int i = 0; i < 6; i++)
             {
-                var newNode = CreateRandomNode();
-                _allNodes.Add(newNode);
+                if (!node.CanAddNeighbor())
+                    break;
 
-                node.Neighbors.Add(newNode);
-                newNode.Neighbors.Add(node);
+                var coord = node.Coord.Neighbor(i);
+                if (!_coordToNode.TryGetValue(coord, out var existing))
+                    continue;
+                if (!existing.CanAddNeighbor())
+                    continue;
 
-                added++;
+                bool alreadyConnected = false;
+                foreach (var n in node.Neighbors)
+                {
+                    if (n == existing)
+                    {
+                        alreadyConnected = true;
+                        break;
+                    }
+                }
+                if (alreadyConnected)
+                    continue;
+
+                if (_rng.NextDouble() < 0.4)
+                {
+                    node.Neighbors.Add(existing);
+                    existing.Neighbors.Add(node);
+                }
             }
-
-            return added;
         }
 
-        private HexNode CreateRandomNode()
+        private HexNode CreateRandomNode(HexCoord coord)
         {
             double roll = _rng.NextDouble();
             double cumulative = 0;
@@ -80,47 +119,49 @@ namespace libraryNodes
             {
                 cumulative += weight;
                 if (roll <= cumulative)
-                    return new HexNode(_nextId++, type);
+                    return new HexNode(_nextId++, type, coord);
             }
-            return new HexNode(_nextId++, NodeType.Passage);
+            return new HexNode(_nextId++, NodeType.Passage, coord);
         }
 
-        // Legacy batch generation
-        public HexNode Generate()
+        private List<int> GetFreeDirections(HexNode node)
         {
-            var start = CreateStartNode();
-            var expandable = new Queue<HexNode>();
-            expandable.Enqueue(start);
-
-            while (expandable.Count > 0 && _allNodes.Count < _maxNodes)
+            var free = new List<int>();
+            for (int dir = 0; dir < 6; dir++)
             {
-                var current = expandable.Dequeue();
-                int openSlots = current.MaxNeighbors - current.Neighbors.Count;
-                if (openSlots <= 0)
-                    continue;
-
-                int neighborsToAdd = Math.Min(
-                    _rng.Next(1, openSlots + 1),
-                    _maxNodes - _allNodes.Count
-                );
-
-                for (int i = 0; i < neighborsToAdd; i++)
+                var coord = node.Coord.Neighbor(dir);
+                bool occupied = false;
+                foreach (var n in node.Neighbors)
                 {
-                    var newNode = CreateRandomNode();
-                    _allNodes.Add(newNode);
-
-                    current.Neighbors.Add(newNode);
-                    newNode.Neighbors.Add(current);
-
-                    if (newNode.CanAddNeighbor())
-                        expandable.Enqueue(newNode);
-
-                    if (_allNodes.Count >= _maxNodes)
+                    if (((HexNode)n).Coord == coord)
+                    {
+                        occupied = true;
                         break;
+                    }
                 }
+                if (!occupied)
+                    free.Add(dir);
             }
+            return free;
+        }
 
-            return start;
+        private static bool HasNeighborAt(HexNode node, HexCoord coord)
+        {
+            foreach (var n in node.Neighbors)
+                if (((HexNode)n).Coord == coord)
+                    return true;
+            return false;
+        }
+
+        private void Shuffle<T>(IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = _rng.Next(n + 1);
+                (list[k], list[n]) = (list[n], list[k]);
+            }
         }
     }
 }
