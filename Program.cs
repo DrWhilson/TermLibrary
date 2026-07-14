@@ -47,12 +47,7 @@ class Program
             }
             else if (hasActions && choice == current.Neighbors.Count + 1)
             {
-                var random = new Random();
-                const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var text = new char[1100];
-                for (int i = 0; i < 1100; i++)
-                    text[i] = chars[random.Next(chars.Length)];
-                RoomRenderer.ShowBookPage(new string(text), random.Next(1, 999));
+                RoomRenderer.ShowBookPage(current.BookText!, current.BookPageNumber);
                 Console.WriteLine("\nНажмите Enter...");
                 Console.ReadLine();
             }
