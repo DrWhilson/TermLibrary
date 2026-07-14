@@ -3,11 +3,12 @@ namespace libraryNodes
     public static class RoomRenderer
     {
         public static void Render(HexNode node)
-        {
-            Console.Clear();
-            DrawRoom(node);
-            DrawExits(node);
-        }
+    {
+        Console.Clear();
+        DrawRoom(node);
+        DrawExits(node);
+        DrawActions(node);
+    }
 
         private static void DrawRoom(HexNode node)
         {
@@ -64,6 +65,15 @@ namespace libraryNodes
             {
                 var neighbor = (HexNode)node.Neighbors[i];
                 Console.WriteLine("  {0}) [{1}] {2}", i + 1, neighbor.Id, neighbor.NodeType);
+            }
+        }
+
+        public static void DrawActions(HexNode node)
+        {
+            if (node.NodeType == NodeType.HexRoom)
+            {
+                Console.WriteLine("\nДействия:");
+                Console.WriteLine("  {0}) Взять книгу", node.Neighbors.Count + 1);
             }
         }
     }
