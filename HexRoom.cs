@@ -1,18 +1,20 @@
-using static libraryNodes.NodeTypeInfo;
-
 namespace libraryNodes
 {
-    public class HexNode : GraphNode<int>
+    public class HexNode
     {
+        public int Id { get; set; }
         public NodeType NodeType { get; set; }
-        public int MaxNeighbors => MaxNeighbors(NodeType);
         public HexCoord Coord { get; set; }
+        public List<HexNode> Neighbors { get; set; }
+
+        public int MaxNeighbors => NodeType.MaxNeighbors();
 
         public HexNode(int id, NodeType type, HexCoord coord)
-            : base(id, type.ToString())
         {
+            Id = id;
             NodeType = type;
             Coord = coord;
+            Neighbors = new List<HexNode>();
         }
 
         public bool CanAddNeighbor() => Neighbors.Count < MaxNeighbors;

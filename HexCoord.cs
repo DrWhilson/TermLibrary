@@ -21,8 +21,6 @@ namespace libraryNodes
             new(0, 1),
         ];
 
-        public static ReadOnlySpan<HexCoord> Directions => DirOffsets;
-
         public HexCoord Neighbor(int index) =>
             new(Q + DirOffsets[index].Q, R + DirOffsets[index].R);
 

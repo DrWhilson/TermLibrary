@@ -7,9 +7,9 @@ namespace libraryNodes
         DeadEnd,
     }
 
-    public static class NodeTypeInfo
+    public static class NodeTypeExtensions
     {
-        public static int MaxNeighbors(NodeType type) =>
+        public static int MaxNeighbors(this NodeType type) =>
             type switch
             {
                 NodeType.HexRoom => 6,

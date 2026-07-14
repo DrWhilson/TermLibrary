@@ -32,7 +32,12 @@ namespace libraryNodes
             if (depth <= 0)
                 return;
 
-            // Phase 1: fill ALL slots of the parent first
+            var newNodes = FillNodeSlots(node);
+            ExpandChildren(newNodes, depth);
+        }
+
+        private List<HexNode> FillNodeSlots(HexNode node)
+        {
             var freeDirs = GetFreeDirections(node);
             Shuffle(freeDirs);
 
@@ -72,8 +77,12 @@ namespace libraryNodes
                 }
             }
 
-            // Phase 2: expand children — parent is already full
-            foreach (var child in newNodes)
+            return newNodes;
+        }
+
+        private void ExpandChildren(List<HexNode> nodes, int depth)
+        {
+            foreach (var child in nodes)
             {
                 TryConnectExisting(child);
                 ExpandDepth(child, depth - 1);
@@ -92,17 +101,7 @@ namespace libraryNodes
                     continue;
                 if (!existing.CanAddNeighbor())
                     continue;
-
-                bool alreadyConnected = false;
-                foreach (var n in node.Neighbors)
-                {
-                    if (n == existing)
-                    {
-                        alreadyConnected = true;
-                        break;
-                    }
-                }
-                if (alreadyConnected)
+                if (node.Neighbors.Contains(existing))
                     continue;
 
                 if (_rng.NextDouble() < 0.4 && CanConnectTypes(node, existing))
@@ -130,16 +129,7 @@ namespace libraryNodes
             for (int dir = 0; dir < 6; dir++)
             {
                 var coord = node.Coord.Neighbor(dir);
-                bool occupied = false;
-                foreach (var n in node.Neighbors)
-                {
-                    if (((HexNode)n).Coord == coord)
-                    {
-                        occupied = true;
-                        break;
-                    }
-                }
-                if (!occupied)
+                if (!HasNeighborAt(node, coord))
                     free.Add(dir);
             }
             return free;
@@ -148,7 +138,7 @@ namespace libraryNodes
         private static bool HasNeighborAt(HexNode node, HexCoord coord)
         {
             foreach (var n in node.Neighbors)
-                if (((HexNode)n).Coord == coord)
+                if (n.Coord == coord)
                     return true;
             return false;
         }

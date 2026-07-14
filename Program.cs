@@ -33,10 +33,8 @@ class Program
                 continue;
             }
 
-            current = (HexNode)current.Neighbors[choice - 1];
-
-            if (current.CanAddNeighbor())
-                generator.ExpandDepth(current, depth: 2);
+            current = current.Neighbors[choice - 1];
+            generator.ExpandDepth(current, depth: 2);
         }
     }
 }

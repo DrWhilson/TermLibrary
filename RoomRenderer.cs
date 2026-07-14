@@ -2,6 +2,33 @@ namespace libraryNodes
 {
     public static class RoomRenderer
     {
+        private static readonly Dictionary<NodeType, string[]> Templates = new()
+        {
+            [NodeType.HexRoom] =
+            [
+                "    +----------+",
+                "   /            \\",
+                "  |     [{0}]     |",
+                "  |  HexRoom    |",
+                "   \\            /",
+                "    +----------+",
+            ],
+            [NodeType.Passage] =
+            [
+                "+----------------+",
+                "|      [{0}]       |",
+                "|    Passage     |",
+                "+----------------+",
+            ],
+            [NodeType.DeadEnd] =
+            [
+                "+--------------+",
+                "|     [{0}]      |",
+                "|   DeadEnd    |",
+                "+--------------+",
+            ],
+        };
+
         public static void Render(HexNode node)
         {
             Console.Clear();
@@ -13,44 +40,9 @@ namespace libraryNodes
         {
             Console.WriteLine("  Координаты: {0}\n", node.Coord);
 
-            switch (node.NodeType)
-            {
-                case NodeType.HexRoom:
-                    DrawHexRoom(node);
-                    break;
-                case NodeType.Passage:
-                    DrawPassage(node);
-                    break;
-                case NodeType.DeadEnd:
-                    DrawDeadEnd(node);
-                    break;
-            }
-        }
-
-        private static void DrawHexRoom(HexNode node)
-        {
-            Console.WriteLine("    +----------+");
-            Console.WriteLine("   /            \\");
-            Console.WriteLine("  |     [{0}]     |", node.Id);
-            Console.WriteLine("  |  HexRoom    |");
-            Console.WriteLine("   \\            /");
-            Console.WriteLine("    +----------+");
-        }
-
-        private static void DrawPassage(HexNode node)
-        {
-            Console.WriteLine("+----------------+");
-            Console.WriteLine("|      [{0}]       |", node.Id);
-            Console.WriteLine("|    Passage     |");
-            Console.WriteLine("+----------------+");
-        }
-
-        private static void DrawDeadEnd(HexNode node)
-        {
-            Console.WriteLine("+--------------+");
-            Console.WriteLine("|     [{0}]      |", node.Id);
-            Console.WriteLine("|   DeadEnd    |");
-            Console.WriteLine("+--------------+");
+            var template = Templates[node.NodeType];
+            foreach (var line in template)
+                Console.WriteLine(line, node.Id);
         }
 
         private static void DrawExits(HexNode node)
@@ -64,7 +56,7 @@ namespace libraryNodes
             Console.WriteLine("\nВыходы:");
             for (int i = 0; i < node.Neighbors.Count; i++)
             {
-                var neighbor = (HexNode)node.Neighbors[i];
+                var neighbor = node.Neighbors[i];
                 Console.WriteLine(
                     "  {0}) [{1}] {2}  {3}",
                     i + 1,
