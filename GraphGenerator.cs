@@ -29,10 +29,14 @@ namespace libraryNodes
 
         public void ExpandDepth(HexNode node, int depth)
         {
-            if (depth <= 0) return;
+            if (depth <= 0)
+                return;
 
+            // Phase 1: fill ALL slots of the parent first
             var freeDirs = GetFreeDirections(node);
             Shuffle(freeDirs);
+
+            var newNodes = new List<HexNode>();
 
             foreach (var dir in freeDirs)
             {
@@ -64,10 +68,15 @@ namespace libraryNodes
                     node.Neighbors.Add(newNode);
                     newNode.Neighbors.Add(node);
 
-                    TryConnectExisting(newNode);
-
-                    ExpandDepth(newNode, depth - 1);
+                    newNodes.Add(newNode);
                 }
+            }
+
+            // Phase 2: expand children — parent is already full
+            foreach (var child in newNodes)
+            {
+                TryConnectExisting(child);
+                ExpandDepth(child, depth - 1);
             }
         }
 
@@ -110,7 +119,7 @@ namespace libraryNodes
             {
                 NodeType.HexRoom => _rng.NextDouble() < 0.6 ? NodeType.Passage : NodeType.DeadEnd,
                 NodeType.Passage => NodeType.HexRoom,
-                _ => NodeType.Passage
+                _ => NodeType.Passage,
             };
             return new HexNode(_nextId++, type, coord);
         }
@@ -147,6 +156,8 @@ namespace libraryNodes
         private static bool CanConnectTypes(HexNode a, HexNode b)
         {
             if (a.NodeType == NodeType.HexRoom && b.NodeType == NodeType.HexRoom)
+                return false;
+            if (a.NodeType == NodeType.Passage && b.NodeType == NodeType.Passage)
                 return false;
             return true;
         }

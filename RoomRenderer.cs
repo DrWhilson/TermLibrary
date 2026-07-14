@@ -65,7 +65,13 @@ namespace libraryNodes
             for (int i = 0; i < node.Neighbors.Count; i++)
             {
                 var neighbor = (HexNode)node.Neighbors[i];
-                Console.WriteLine("  {0}) [{1}] {2}  {3}", i + 1, neighbor.Id, neighbor.NodeType, neighbor.Coord);
+                Console.WriteLine(
+                    "  {0}) [{1}] {2}  {3}",
+                    i + 1,
+                    neighbor.Id,
+                    neighbor.NodeType,
+                    neighbor.Coord
+                );
             }
         }
     }
