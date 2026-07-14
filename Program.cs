@@ -18,6 +18,13 @@ class Program
             var input = Console.ReadLine()?.Trim().ToLower();
             if (input == "q")
             {
+                Console.Write("Сохранить граф в graph.dot? (y/n): ");
+                if (Console.ReadLine()?.Trim().ToLower() == "y")
+                {
+                    var start = generator.AllNodes[0];
+                    GraphExporter.ExportToDot(start, "graph.dot");
+                    Console.WriteLine("Сохранено: graph.dot");
+                }
                 Console.WriteLine("Выход.");
                 break;
             }
