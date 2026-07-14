@@ -6,7 +6,7 @@ class Program
     {
         var generator = new GraphGenerator(seed: null, maxNodes: 100);
         var current = generator.CreateStartNode();
-        generator.ExpandNode(current, 2);
+        generator.ExpandDepth(current, depth: 2);
 
         while (true)
         {
@@ -22,7 +22,11 @@ class Program
                 break;
             }
 
-            if (!int.TryParse(input, out int choice) || choice < 1 || choice > current.Neighbors.Count)
+            if (
+                !int.TryParse(input, out int choice)
+                || choice < 1
+                || choice > current.Neighbors.Count
+            )
             {
                 Console.WriteLine("Неверный ввод. Нажмите Enter...");
                 Console.ReadLine();
@@ -32,7 +36,7 @@ class Program
             current = (HexNode)current.Neighbors[choice - 1];
 
             if (current.CanAddNeighbor())
-                generator.ExpandNode(current, 2);
+                generator.ExpandDepth(current, depth: 2);
         }
     }
 }

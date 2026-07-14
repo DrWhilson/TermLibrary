@@ -11,7 +11,7 @@ namespace libraryNodes
         [
             (NodeType.HexRoom, 0.30),
             (NodeType.Passage, 0.50),
-            (NodeType.DeadEnd, 0.20)
+            (NodeType.DeadEnd, 0.20),
         ];
 
         public IReadOnlyList<HexNode> AllNodes => _allNodes;
@@ -29,6 +29,27 @@ namespace libraryNodes
             var start = new HexNode(0, NodeType.HexRoom);
             _allNodes.Add(start);
             return start;
+        }
+
+        public void ExpandDepth(HexNode node, int depth)
+        {
+            if (depth <= 0) return;
+
+            int openSlots = node.MaxNeighbors - node.Neighbors.Count;
+            int canAdd = Math.Min(openSlots, _maxNodes - _allNodes.Count);
+
+            var newNodes = new List<HexNode>();
+            for (int i = 0; i < canAdd; i++)
+            {
+                var newNode = CreateRandomNode();
+                _allNodes.Add(newNode);
+                node.Neighbors.Add(newNode);
+                newNode.Neighbors.Add(node);
+                newNodes.Add(newNode);
+            }
+
+            foreach (var n in newNodes)
+                ExpandDepth(n, depth - 1);
         }
 
         public int ExpandNode(HexNode node, int count)
@@ -75,7 +96,8 @@ namespace libraryNodes
             {
                 var current = expandable.Dequeue();
                 int openSlots = current.MaxNeighbors - current.Neighbors.Count;
-                if (openSlots <= 0) continue;
+                if (openSlots <= 0)
+                    continue;
 
                 int neighborsToAdd = Math.Min(
                     _rng.Next(1, openSlots + 1),
