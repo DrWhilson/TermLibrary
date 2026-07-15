@@ -4,8 +4,8 @@ class Program
 {
     static void Main()
     {
-        var generator = new GraphGenerator(seed: null, maxNodes: 100);
-        generator.GenerateGrid(maxHexRooms: 20);
+        var generator = new GraphGenerator(seed: null, maxNodes: 200);
+        generator.GenerateGrid(maxHexRooms: 70);
         var current = generator.AllNodes[0];
 
         while (true)
