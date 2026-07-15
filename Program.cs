@@ -5,8 +5,8 @@ class Program
     static void Main()
     {
         var generator = new GraphGenerator(seed: null, maxNodes: 100);
-        var current = generator.CreateStartNode();
-        generator.ExpandDepth(current, depth: 2);
+        generator.GenerateGrid(maxHexRooms: 20);
+        var current = generator.AllNodes[0];
 
         while (true)
         {
@@ -41,7 +41,6 @@ class Program
             }
 
             current = current.Neighbors[choice - 1];
-            generator.ExpandDepth(current, depth: 2);
         }
     }
 }

@@ -27,6 +27,81 @@ namespace libraryNodes
             return start;
         }
 
+        public void GenerateGrid(int maxHexRooms = 20)
+        {
+            var start = CreateStartNode();
+            var queue = new Queue<HexNode>();
+            var enqueued = new HashSet<HexCoord> { start.Coord };
+            queue.Enqueue(start);
+            int hexRoomCount = 1;
+
+            while (queue.Count > 0 && hexRoomCount < maxHexRooms && _allNodes.Count < _maxNodes)
+            {
+                var hexRoom = queue.Dequeue();
+
+                for (int dir = 0; dir < 6; dir++)
+                {
+                    if (!hexRoom.CanAddNeighbor())
+                        break;
+                    if (_allNodes.Count >= _maxNodes)
+                        break;
+
+                    var passageCoord = hexRoom.Coord.Neighbor(dir);
+
+                    if (_coordToNode.TryGetValue(passageCoord, out var existingPassage))
+                    {
+                        if (
+                            existingPassage.NodeType == NodeType.Passage
+                            && !hexRoom.Neighbors.Contains(existingPassage)
+                        )
+                        {
+                            hexRoom.Neighbors.Add(existingPassage);
+                            existingPassage.Neighbors.Add(hexRoom);
+                        }
+                        continue;
+                    }
+
+                    var passage = new HexNode(_nextId++, NodeType.Passage, passageCoord);
+                    _allNodes.Add(passage);
+                    _coordToNode[passageCoord] = passage;
+                    hexRoom.Neighbors.Add(passage);
+                    passage.Neighbors.Add(hexRoom);
+
+                    var hexCoord2 = passageCoord.Neighbor(dir);
+
+                    if (_coordToNode.TryGetValue(hexCoord2, out var hexRoom2))
+                    {
+                        if (
+                            hexRoom2.NodeType == NodeType.HexRoom
+                            && hexRoom2.CanAddNeighbor()
+                            && passage.CanAddNeighbor()
+                            && !passage.Neighbors.Contains(hexRoom2)
+                        )
+                        {
+                            passage.Neighbors.Add(hexRoom2);
+                            hexRoom2.Neighbors.Add(passage);
+                        }
+                    }
+                    else if (hexRoomCount < maxHexRooms && _allNodes.Count < _maxNodes)
+                    {
+                        hexRoom2 = new HexNode(_nextId++, NodeType.HexRoom, hexCoord2);
+                        _allNodes.Add(hexRoom2);
+                        _coordToNode[hexCoord2] = hexRoom2;
+                        hexRoomCount++;
+
+                        passage.Neighbors.Add(hexRoom2);
+                        hexRoom2.Neighbors.Add(passage);
+
+                        if (!enqueued.Contains(hexCoord2))
+                        {
+                            enqueued.Add(hexCoord2);
+                            queue.Enqueue(hexRoom2);
+                        }
+                    }
+                }
+            }
+        }
+
         public void ExpandDepth(HexNode node, int depth)
         {
             if (depth <= 0)
