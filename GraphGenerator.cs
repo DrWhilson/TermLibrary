@@ -102,6 +102,92 @@ namespace libraryNodes
             }
         }
 
+        public void PostProcess()
+        {
+            var articulationPoints = FindArticulationPoints();
+
+            var candidates = _allNodes
+                .Where(n => n.NodeType == NodeType.Passage && n.Neighbors.Count == 2 && !articulationPoints.Contains(n.Id))
+                .ToList();
+
+            Shuffle(candidates);
+
+            int toRemove = (int)(candidates.Count * 0.2);
+
+            foreach (var passage in candidates.Take(toRemove))
+            {
+                var hexNeighbors = passage.Neighbors.Where(n => n.NodeType == NodeType.HexRoom).ToList();
+
+                foreach (var hex in hexNeighbors)
+                {
+                    hex.Neighbors.Remove(passage);
+                    var deadEnd = new HexNode(_nextId++, NodeType.DeadEnd, passage.Coord);
+                    _allNodes.Add(deadEnd);
+                    hex.Neighbors.Add(deadEnd);
+                    deadEnd.Neighbors.Add(hex);
+                }
+
+                foreach (var n in passage.Neighbors.ToList())
+                    n.Neighbors.Remove(passage);
+
+                _allNodes.Remove(passage);
+                _coordToNode.Remove(passage.Coord);
+            }
+        }
+
+        private HashSet<int> FindArticulationPoints()
+        {
+            var nodeMap = _allNodes.ToDictionary(n => n.Id);
+            var visited = new HashSet<int>();
+            var disc = new Dictionary<int, int>();
+            var low = new Dictionary<int, int>();
+            var ap = new HashSet<int>();
+            int time = 0;
+
+            foreach (var node in _allNodes)
+            {
+                if (!visited.Contains(node.Id))
+                    Dfs(node.Id, -1, visited, disc, low, ap, ref time, nodeMap);
+            }
+
+            return ap;
+        }
+
+        private static void Dfs(
+            int u, int parent, HashSet<int> visited, Dictionary<int, int> disc,
+            Dictionary<int, int> low, HashSet<int> ap, ref int time,
+            Dictionary<int, HexNode> nodeMap)
+        {
+            visited.Add(u);
+            disc[u] = low[u] = ++time;
+            int children = 0;
+
+            if (!nodeMap.TryGetValue(u, out var node))
+                return;
+
+            foreach (var neighbor in node.Neighbors)
+            {
+                int v = neighbor.Id;
+                if (v == parent) continue;
+
+                if (!visited.Contains(v))
+                {
+                    children++;
+                    Dfs(v, u, visited, disc, low, ap, ref time, nodeMap);
+                    low[u] = Math.Min(low[u], low[v]);
+
+                    if (parent == -1 && children > 1)
+                        ap.Add(u);
+                    else if (parent != -1 && low[v] >= disc[u])
+                        ap.Add(u);
+                }
+                else
+                {
+                    low[u] = Math.Min(low[u], disc[v]);
+                }
+            }
+        }
+
         public void ExpandDepth(HexNode node, int depth)
         {
             if (depth <= 0)
