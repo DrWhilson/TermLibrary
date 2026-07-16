@@ -47,16 +47,18 @@ namespace libraryNodes
 
         private static void DrawExits(HexNode node)
         {
-            if (node.Neighbors.Count == 0)
+            var exits = node.Neighbors.Where(n => n.NodeType != NodeType.DeadEnd).ToList();
+
+            if (exits.Count == 0)
             {
-                Console.WriteLine("\nНет выходов.");
+                Console.WriteLine("\nВсе проходы заблокированы.");
                 return;
             }
 
             Console.WriteLine("\nВыходы:");
-            for (int i = 0; i < node.Neighbors.Count; i++)
+            for (int i = 0; i < exits.Count; i++)
             {
-                var neighbor = node.Neighbors[i];
+                var neighbor = exits[i];
                 Console.WriteLine(
                     "  {0}) [{1}] {2}  {3}",
                     i + 1,

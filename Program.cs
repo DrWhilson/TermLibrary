@@ -12,8 +12,10 @@ class Program
         {
             RoomRenderer.Render(current);
 
+            var exits = current.Neighbors.Where(n => n.NodeType != NodeType.DeadEnd).ToList();
+
             Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━");
-            Console.Write("Куда идти? (1-{0}, q=выход): ", current.Neighbors.Count);
+            Console.Write("Куда идти? (1-{0}, q=выход): ", exits.Count);
 
             var input = Console.ReadLine()?.Trim().ToLower();
             if (input == "q")
@@ -32,7 +34,7 @@ class Program
             if (
                 !int.TryParse(input, out int choice)
                 || choice < 1
-                || choice > current.Neighbors.Count
+                || choice > exits.Count
             )
             {
                 Console.WriteLine("Неверный ввод. Нажмите Enter...");
@@ -40,7 +42,7 @@ class Program
                 continue;
             }
 
-            current = current.Neighbors[choice - 1];
+            current = exits[choice - 1];
         }
     }
 }
