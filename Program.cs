@@ -6,7 +6,6 @@ class Program
     {
         var generator = new GraphGenerator(seed: null, maxNodes: 200);
         generator.GenerateGrid(maxHexRooms: 70);
-        generator.PostProcess();
         var current = generator.AllNodes[0];
 
         while (true)

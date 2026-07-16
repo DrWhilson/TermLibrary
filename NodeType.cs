@@ -14,7 +14,7 @@ namespace libraryNodes
             {
                 NodeType.HexRoom => 6,
                 NodeType.Passage => 2,
-                NodeType.DeadEnd => 1,
+                NodeType.DeadEnd => 2,
                 _ => throw new ArgumentOutOfRangeException(nameof(type)),
             };
     }
