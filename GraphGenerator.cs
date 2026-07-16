@@ -104,6 +104,68 @@ namespace libraryNodes
             }
         }
 
+        public void ExpandFrom(HexNode node, int depth)
+        {
+            if (depth <= 0 || node.NodeType != NodeType.HexRoom)
+                return;
+            if (_allNodes.Count >= _maxNodes)
+                return;
+
+            for (int dir = 0; dir < 6; dir++)
+            {
+                if (!node.CanAddNeighbor())
+                    break;
+                if (_allNodes.Count >= _maxNodes)
+                    break;
+
+                var corridorCoord = node.Coord.Neighbor(dir);
+
+                if (node.Neighbors.Any(n => n.Coord == corridorCoord))
+                    continue;
+
+                if (_coordToNode.TryGetValue(corridorCoord, out var existing))
+                {
+                    if (existing.CanAddNeighbor())
+                    {
+                        node.Neighbors.Add(existing);
+                        existing.Neighbors.Add(node);
+                    }
+                    continue;
+                }
+
+                var type = _rng.NextDouble() < 0.5 ? NodeType.Passage : NodeType.DeadEnd;
+                var corridor = new HexNode(_nextId++, type, corridorCoord);
+                _allNodes.Add(corridor);
+                _coordToNode[corridorCoord] = corridor;
+                node.Neighbors.Add(corridor);
+                corridor.Neighbors.Add(node);
+
+                var hexCoord2 = corridorCoord.Neighbor(dir);
+
+                if (_coordToNode.TryGetValue(hexCoord2, out var farHex))
+                {
+                    if (
+                        farHex.NodeType == NodeType.HexRoom
+                        && farHex.CanAddNeighbor()
+                        && corridor.CanAddNeighbor()
+                    )
+                    {
+                        corridor.Neighbors.Add(farHex);
+                        farHex.Neighbors.Add(corridor);
+                    }
+                }
+                else
+                {
+                    farHex = new HexNode(_nextId++, NodeType.HexRoom, hexCoord2);
+                    _allNodes.Add(farHex);
+                    _coordToNode[hexCoord2] = farHex;
+                    corridor.Neighbors.Add(farHex);
+                    farHex.Neighbors.Add(corridor);
+                    ExpandFrom(farHex, depth - 1);
+                }
+            }
+        }
+
         public void ExpandDepth(HexNode node, int depth)
         {
             if (depth <= 0)

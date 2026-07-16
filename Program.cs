@@ -2,15 +2,20 @@
 
 class Program
 {
+    const int ExpandDepth = 2;
+
     static void Main()
     {
-        var generator = new GraphGenerator(seed: null, maxNodes: 200);
-        generator.GenerateGrid(maxHexRooms: 70);
+        var generator = new GraphGenerator(seed: null, maxNodes: 5000);
+        generator.GenerateGrid(maxHexRooms: 15);
         var current = generator.AllNodes[0];
 
         while (true)
         {
             RoomRenderer.Render(current);
+
+            if (current.NodeType == NodeType.HexRoom)
+                generator.ExpandFrom(current, ExpandDepth);
 
             var exits = current.Neighbors.Where(n => n.NodeType != NodeType.DeadEnd).ToList();
 
