@@ -17,7 +17,9 @@ class Program
             if (current.NodeType == NodeType.HexRoom)
                 generator.ExpandFrom(current, ExpandDepth);
 
-            var exits = current.Neighbors.Where(n => n.NodeType != NodeType.DeadEnd).ToList();
+            var exits = current.Neighbors
+                .Where(n => n.NodeType != NodeType.DeadEnd && n.NodeType != NodeType.PseudoDeadEnd)
+                .ToList();
 
             Console.WriteLine("\n━━━━━━━━━━━━━━━━━━━━━━━━");
             Console.Write("Куда идти? (1-{0}, q=выход): ", exits.Count);

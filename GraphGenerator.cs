@@ -102,6 +102,8 @@ namespace libraryNodes
                     }
                 }
             }
+
+            FillPlugs();
         }
 
         public void ExpandFrom(HexNode node, int depth)
@@ -125,12 +127,28 @@ namespace libraryNodes
 
                 if (_coordToNode.TryGetValue(corridorCoord, out var existing))
                 {
-                    if (existing.CanAddNeighbor())
+                    if (existing.NodeType == NodeType.PseudoDeadEnd)
                     {
-                        node.Neighbors.Add(existing);
-                        existing.Neighbors.Add(node);
+                        RemoveNode(existing);
+                        if (_rng.NextDouble() < 0.4)
+                        {
+                            var transition = new HexNode(_nextId++, NodeType.Transition, corridorCoord);
+                            _allNodes.Add(transition);
+                            _coordToNode[corridorCoord] = transition;
+                            node.Neighbors.Add(transition);
+                            transition.Neighbors.Add(node);
+                            continue;
+                        }
                     }
-                    continue;
+                    else
+                    {
+                        if (existing.CanAddNeighbor())
+                        {
+                            node.Neighbors.Add(existing);
+                            existing.Neighbors.Add(node);
+                        }
+                        continue;
+                    }
                 }
 
                 var type = _rng.NextDouble() < 0.5 ? NodeType.Passage : NodeType.DeadEnd;
@@ -164,6 +182,8 @@ namespace libraryNodes
                     ExpandFrom(farHex, depth - 1);
                 }
             }
+
+            FillPlugs();
         }
 
         public void ExpandDepth(HexNode node, int depth)
@@ -288,7 +308,47 @@ namespace libraryNodes
                 return false;
             if (a.NodeType == NodeType.Passage && b.NodeType == NodeType.Passage)
                 return false;
+            if (a.NodeType == NodeType.PseudoDeadEnd || b.NodeType == NodeType.PseudoDeadEnd)
+                return true;
             return true;
+        }
+
+        private void FillPlugs()
+        {
+            var snapshot = _allNodes.ToList();
+
+            foreach (var node in snapshot)
+            {
+                if (node.NodeType == NodeType.PseudoDeadEnd)
+                    continue;
+
+                for (int dir = 0; dir < 6; dir++)
+                {
+                    if (!node.CanAddNeighbor())
+                        break;
+                    if (_allNodes.Count >= _maxNodes)
+                        return;
+
+                    var coord = node.Coord.Neighbor(dir);
+                    if (_coordToNode.ContainsKey(coord))
+                        continue;
+
+                    var plug = new HexNode(_nextId++, NodeType.PseudoDeadEnd, coord);
+                    _allNodes.Add(plug);
+                    _coordToNode[coord] = plug;
+                    node.Neighbors.Add(plug);
+                    plug.Neighbors.Add(node);
+                }
+            }
+        }
+
+        private void RemoveNode(HexNode node)
+        {
+            foreach (var neighbor in node.Neighbors.ToList())
+                neighbor.Neighbors.Remove(node);
+            node.Neighbors.Clear();
+            _allNodes.Remove(node);
+            _coordToNode.Remove(node.Coord);
         }
 
         private void Shuffle<T>(IList<T> list)

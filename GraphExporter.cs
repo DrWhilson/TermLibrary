@@ -46,6 +46,8 @@ namespace libraryNodes
                     NodeType.HexRoom => ("hexagon", "#AED6F1"),
                     NodeType.Passage => ("box", "#F9E79F"),
                     NodeType.DeadEnd => ("square", "#F5B7B1"),
+                    NodeType.Transition => ("hexagon", "#82E0AA"),
+                    NodeType.PseudoDeadEnd => ("square", "#D5D8DC"),
                     _ => ("ellipse", "#FFFFFF")
                 };
 

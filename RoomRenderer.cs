@@ -27,6 +27,22 @@ namespace libraryNodes
                 "|   DeadEnd    |",
                 "+--------------+",
             ],
+            [NodeType.Transition] =
+            [
+                "    +==========+",
+                "   //            \\\\",
+                "  ||     [{0}]     ||",
+                "  ||  Transition ||",
+                "   \\\\            //",
+                "    +==========+",
+            ],
+            [NodeType.PseudoDeadEnd] =
+            [
+                "+--------------+",
+                "|     [{0}]      |",
+                "|  (Plug)      |",
+                "+--------------+",
+            ],
         };
 
         public static void Render(HexNode node)
@@ -47,7 +63,9 @@ namespace libraryNodes
 
         private static void DrawExits(HexNode node)
         {
-            var exits = node.Neighbors.Where(n => n.NodeType != NodeType.DeadEnd).ToList();
+            var exits = node.Neighbors
+                .Where(n => n.NodeType != NodeType.DeadEnd && n.NodeType != NodeType.PseudoDeadEnd)
+                .ToList();
 
             if (exits.Count == 0)
             {
