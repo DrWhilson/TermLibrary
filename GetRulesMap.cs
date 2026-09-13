@@ -36,11 +36,21 @@ namespace RuleMap
             return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options);
         }
 
+        public List<string> GetTergetsFor(string source_node)
+        {
+            var targets = new List<string>();
+            foreach (var link in Links)
+            {
+                if (string.Equals((link.source, source_node, StringComparison.OrdinalIgnoreCase))) targets.Add(link.Target);
+            }
+            return targets;
+        }
+
         public RuleMap()
         {
             string path = "./rule.json";
 
-            RuleMap rule_map = RuleMap.LoadFromFile();
+            RuleMap rule_map = RuleMap.LoadFromFile(path);
         }
     }
 }
