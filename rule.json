@@ -1,0 +1,9 @@
+{
+  "Nodes":[
+    {"name": "Hex"},
+    {"name": "Labyrinth"},
+  ],
+  "Links":[
+    {"source": "Hex", "target": "Labyrinth"},
+  ]
+}
