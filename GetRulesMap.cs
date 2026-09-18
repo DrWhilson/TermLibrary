@@ -40,15 +40,15 @@ namespace maps
             return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options);
         }
 
-        // public List<string> GetTergetsFor(string source_node)
-        // {
-        //     var targets = new List<string>();
-        //     foreach (var link in Links)
-        //     {
-        //         if (string.Equals((link.source, source_node, StringComparison.OrdinalIgnoreCase)))
-        //             targets.Add(link.Target);
-        //     }
-        //     return targets;
-        // }
+        public List<string> GetTargetsFor(string sourceNode)
+        {
+            var targets = new List<string>();
+            foreach (var link in Links)
+            {
+                if (string.Equals(link.source, sourceNode, StringComparison.OrdinalIgnoreCase))
+                    targets.Add(link.target);
+            }
+            return targets;
+        }
     }
 }

@@ -6,6 +6,12 @@ class Program
     {
         string path = "./rule.json";
         RuleMap rule_map = RuleMap.LoadFromFile(path);
-        // RuleMap reule_map();
+
+        List<string> targets = rule_map.GetTargetsFor("Hex");
+
+        foreach (var target in targets)
+        {
+            Console.WriteLine($"- {target}");
+        }
     }
 }
