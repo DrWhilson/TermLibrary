@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace maps
 {
@@ -10,17 +8,19 @@ namespace maps
         // Internal Class
         private class Node
         {
-            public string Name { get; set; }
+            public required string Name { get; set; }
         }
 
         private class Link
         {
-            public string target { get; set; }
-            public string source { get; set; }
+            public required string target { get; set; }
+            public required string source { get; set; }
         }
 
         // Target Lists
+        [JsonInclude]
         private List<Node> Nodes { get; set; } = new List<Node>();
+        [JsonInclude]
         private List<Link> Links { get; set; } = new List<Link>();
 
         private static readonly JsonSerializerOptions jason_options = new JsonSerializerOptions
@@ -37,7 +37,7 @@ namespace maps
             }
 
             string json_string = File.ReadAllText(file_path);
-            return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options);
+            return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options)!;
         }
 
         public List<string> GetTargetsFor(string sourceNode)
