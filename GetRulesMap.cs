@@ -20,6 +20,7 @@ namespace maps
         // Target Lists
         [JsonInclude]
         private List<Node> Nodes { get; set; } = new List<Node>();
+
         [JsonInclude]
         private List<Link> Links { get; set; } = new List<Link>();
 
@@ -40,13 +41,16 @@ namespace maps
             return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options)!;
         }
 
-        public List<string> GetTargetsFor(string sourceNode)
+        public List<string> GetLinksFor(string sourceNode)
         {
             var targets = new List<string>();
             foreach (var link in Links)
             {
                 if (string.Equals(link.source, sourceNode, StringComparison.OrdinalIgnoreCase))
                     targets.Add(link.target);
+
+                if (string.Equals(link.target, sourceNode, StringComparison.OrdinalIgnoreCase))
+                    targets.Add(link.source);
             }
             return targets;
         }
