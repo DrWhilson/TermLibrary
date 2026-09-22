@@ -1,3 +1,17 @@
 namespace MyProject.General_Map;
 
-public class Node { }
+public class Node
+{
+    private string? name { get; set; }
+
+    private List<Node> links { get; set; } = new List<Node>();
+    public void AddNewNeighbor(Node newNode)
+    {
+        if (newNode != null) this.links.Add(newNode);
+    }
+
+    public List<Node> GetAllNeighbours()
+    {
+        return links;
+    }
+}
