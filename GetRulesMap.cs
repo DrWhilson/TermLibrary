@@ -60,7 +60,7 @@ namespace maps
         }
         public List<string> GetAllNames()
         {
-            List<string> all_names = new List<string>();
+            List<string> all_names = new();
             foreach (var node in Nodes)
             {
                 all_names.Add(node.name);

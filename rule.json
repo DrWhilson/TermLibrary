@@ -2,7 +2,9 @@
   "Nodes":[
     {"name": "Hex"},
     {"name": "Labyrinth"},
-    {"name": "DarkHex"}
+    {"name": "DarkHex"},
+    {"name": "Test"},
+    {"name": "Testd"}
   ],
   "Links":[
     {"source": "Hex", "target": "Labyrinth"},
