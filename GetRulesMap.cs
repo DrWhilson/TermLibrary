@@ -8,7 +8,7 @@ namespace maps
         // Internal Class
         private class Node
         {
-            public required string Name { get; set; }
+            public required string name { get; set; }
         }
 
         private class Link
@@ -53,6 +53,15 @@ namespace maps
                     targets.Add(link.source);
             }
             return targets;
+        }
+        public List<string> GetAllNames()
+        {
+            List<string> all_names = new List<string>();
+            foreach (var node in Nodes)
+            {
+                all_names.Add(node.name);
+            }
+            return all_names;
         }
     }
 }
