@@ -58,14 +58,10 @@ namespace maps
             }
             return targets;
         }
+
         public List<string> GetAllNames()
         {
-            List<string> all_names = new();
-            foreach (var node in Nodes)
-            {
-                all_names.Add(node.name);
-            }
-            return all_names;
+            return Nodes.Where(node => node?.name != null).Select(node => node.name!).ToList();
         }
     }
 }

@@ -13,7 +13,6 @@ public class GenMap
         return all_locations[0];
     }
 
-
     private void GenerateNodes()
     {
         List<string> posible_locations = rule_map.GetAllNames();
