@@ -1,17 +1,8 @@
-﻿// using maps;
-
+﻿using MyProject.General_Map;
 class Program
 {
     static void Main()
     {
-        // string path = "./rule.json";
-        // RuleMap rule_map = RuleMap.LoadFromFile(path);
-        //
-        // List<string> targets = rule_map.GetLinksFor("Hex");
-        //
-        // foreach (var target in targets)
-        // {
-        //     Console.WriteLine($"- {target}");
-        // }
+        GenMap genMap = new GenMap();
     }
 }

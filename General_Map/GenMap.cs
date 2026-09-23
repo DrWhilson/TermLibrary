@@ -12,6 +12,8 @@ public class GenMap
     {
         return all_locations[0];
     }
+
+
     private void GenerateNodes()
     {
         List<string> posible_locations = rule_map.GetAllNames();
@@ -25,12 +27,15 @@ public class GenMap
             }
         }
     }
+
     public GenMap()
     {
-        string path = "../rule.json";
+        string path = @"rule.json";
         rule_map = RuleMap.LoadFromFile(path);
 
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);
+
+        GenerateNodes();
     }
 }

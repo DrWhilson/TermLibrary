@@ -32,6 +32,10 @@ namespace maps
 
         public static RuleMap LoadFromFile(string file_path)
         {
+            string exePath = AppDomain.CurrentDomain.BaseDirectory;
+            string projectRoot = Path.GetFullPath(Path.Combine(exePath, @"..\..\..\"));
+            string filePath = Path.Combine(projectRoot, file_path);
+
             if (!File.Exists(file_path))
             {
                 throw new FileNotFoundException($"File {file_path} does not exist");
