@@ -17,6 +17,7 @@ public class GenMap
 
         GenerateFullLink(); // Gen max of links
 
+        DropSomeLinks(50);
     }
 
     private void GenerateNodes()
@@ -35,9 +36,11 @@ public class GenMap
 
     private void TryLink(Node node1, Node node2)
     {
-        if (node1 == node2) return;
+        if (node1 == node2)
+            return;
 
-        if (!rule_map.GetLinksFor(node1.GetName()).Contains(node2.GetName())) return;
+        if (!rule_map.GetLinksFor(node1.GetName()).Contains(node2.GetName()))
+            return;
 
         node1.AddNewNeighbor(node2);
         node2.AddNewNeighbor(node1);
@@ -52,7 +55,6 @@ public class GenMap
 
     private void DropLink(Node node1, Node node2, int percent)
     {
-
         if (Random.Shared.Next(100) < percent)
         {
             node1.DropNeighbour(node2);
@@ -60,13 +62,14 @@ public class GenMap
         }
     }
 
-    private void DropLinks(int percent)
+    private void DropSomeLinks(int percent)
     {
         foreach (Node location in all_locations)
         {
             foreach (Node neighbour in location.GetAllNeighbours())
             {
-
+                // TODO Check connectivity
+                DropLink(location, neighbour, percent);
             }
         }
     }
