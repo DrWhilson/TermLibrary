@@ -7,7 +7,7 @@ public class Node
     private List<Node> links { get; set; } = new List<Node>();
     public void AddNewNeighbor(Node newNode)
     {
-        if (newNode != null) this.links.Add(newNode);
+        if (newNode != null) links.Add(newNode);
     }
 
     public List<Node> GetAllNeighbours()
