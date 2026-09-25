@@ -16,6 +16,7 @@ public class GenMap
         GenerateNodes(); // Gen couple of locations
 
         GenerateFullLink(); // Gen max of links
+
     }
 
     private void GenerateNodes()
@@ -47,6 +48,27 @@ public class GenMap
         foreach (Node location in all_locations)
             foreach (Node other_locations in all_locations)
                 TryLink(location, other_locations);
+    }
+
+    private void DropLink(Node node1, Node node2, int percent)
+    {
+
+        if (Random.Shared.Next(100) < percent)
+        {
+            node1.DropNeighbour(node2);
+            node2.DropNeighbour(node1);
+        }
+    }
+
+    private void DropLinks(int percent)
+    {
+        foreach (Node location in all_locations)
+        {
+            foreach (Node neighbour in location.GetAllNeighbours())
+            {
+
+            }
+        }
     }
 
     public GenMap()

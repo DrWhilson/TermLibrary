@@ -15,6 +15,13 @@ public class Node
         return links;
     }
 
+    public void DropNeighbour(Node neighbour)
+    {
+        if (!links.Contains(neighbour)) return;
+
+        links.Remove(neighbour);
+    }
+
     public string GetName()
     {
         return this.name;
