@@ -42,7 +42,7 @@ public class GenMap
         node2.AddNewNeighbor(node1);
     }
 
-    void GenerateFullLink()
+    private void GenerateFullLink()
     {
         foreach (Node location in all_locations)
             foreach (Node other_locations in all_locations)
@@ -57,6 +57,9 @@ public class GenMap
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);
 
-        GenerateNodes();
+        // TODO Check save map
+        GenerateBaseMap();
+
+        // Save map
     }
 }
