@@ -8,6 +8,32 @@ public class GenMap
 
     private RuleMap rule_map { get; set; }
 
+    private int DeepSearch(List<Node> graph)
+    {
+        if (graph == null || graph.Count == 0)
+            return 0;
+
+        var visited = new HashSet<Node>();
+
+        return DeepSearchRecursive(graph[0], visited);
+    }
+
+    private int DeepSearchRecursive(Node current, HashSet<Node> visited)
+    {
+        visited.Add(current);
+        int count = 1;
+
+        foreach (Node neighbor in current.GetAllNeighbours())
+        {
+            if (!visited.Contains(neighbor))
+            {
+                count += DeepSearchRecursive(neighbor, visited);
+            }
+        }
+
+        return count;
+    }
+
     private void GenerateBaseMap()
     {
         Node start_hex = new Node("Hex");
