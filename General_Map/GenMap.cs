@@ -8,18 +8,19 @@ public class GenMap
 
     private RuleMap rule_map { get; set; }
 
-    private int DeepSearch(List<Node> graph)
+    private bool CheckReachable(Node start_node, Node ignored_neighbour)
     {
-        if (graph == null || graph.Count == 0)
-            return 0;
+        if (start_node == null)
+            return false;
 
-        var visited = new HashSet<Node>();
+        HashSet<Node> visited = new HashSet<Node>();
 
-        return DeepSearchRecursive(graph[0], visited);
+        return DeepSearch(start_node, visited) == all_locations.Count;
     }
 
-    private int DeepSearchRecursive(Node current, HashSet<Node> visited)
+    private int DeepSearch(Node current, HashSet<Node> visited)
     {
+        // TODO: Check ignored link
         visited.Add(current);
         int count = 1;
 
@@ -27,7 +28,7 @@ public class GenMap
         {
             if (!visited.Contains(neighbor))
             {
-                count += DeepSearchRecursive(neighbor, visited);
+                count += DeepSearch(neighbor, visited);
             }
         }
 
@@ -96,7 +97,8 @@ public class GenMap
             for (int i = 0; i < neighbour.Count; i++)
             {
                 // TODO: Check connectivity
-                DropLink(location, neighbour[i], percent);
+                if (CheckReachable(location, neighbour[i]))
+                    DropLink(location, neighbour[i], percent);
             }
         }
     }
