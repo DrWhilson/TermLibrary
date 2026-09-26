@@ -92,10 +92,11 @@ public class GenMap
     {
         foreach (Node location in all_locations)
         {
-            foreach (Node neighbour in location.GetAllNeighbours())
+            List<Node> neighbour = location.GetAllNeighbours();
+            for (int i = 0; i < neighbour.Count; i++)
             {
                 // TODO Check connectivity
-                DropLink(location, neighbour, percent);
+                DropLink(location, neighbour[i], percent);
             }
         }
     }
