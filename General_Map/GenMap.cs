@@ -95,7 +95,7 @@ public class GenMap
             List<Node> neighbour = location.GetAllNeighbours();
             for (int i = 0; i < neighbour.Count; i++)
             {
-                // TODO Check connectivity
+                // TODO: Check connectivity
                 DropLink(location, neighbour[i], percent);
             }
         }
@@ -109,9 +109,9 @@ public class GenMap
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);
 
-        // TODO Check save map
+        // TODO: Check save map
         GenerateBaseMap();
 
-        // Save map
+        // TODO: Save map
     }
 }
