@@ -1,6 +1,6 @@
 using maps;
 
-namespace MyProject.General_Map;
+namespace TermLibrary.General_Map;
 
 public class GenMap
 {

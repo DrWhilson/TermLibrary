@@ -1,13 +1,15 @@
-namespace MyProject.General_Map;
+namespace TermLibrary.General_Map;
 
 public class Node
 {
     private string name { get; set; }
 
     private List<Node> links { get; set; } = new List<Node>();
+
     public void AddNewNeighbor(Node newNode)
     {
-        if (newNode != null) links.Add(newNode);
+        if (newNode != null)
+            links.Add(newNode);
     }
 
     public List<Node> GetAllNeighbours()
@@ -17,7 +19,8 @@ public class Node
 
     public void DropNeighbour(Node neighbour)
     {
-        if (!links.Contains(neighbour)) return;
+        if (!links.Contains(neighbour))
+            return;
 
         links.Remove(neighbour);
     }

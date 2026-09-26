@@ -1,4 +1,5 @@
-﻿using MyProject.General_Map;
+﻿using TermLibrary.General_Map;
+
 class Program
 {
     static void Main()
