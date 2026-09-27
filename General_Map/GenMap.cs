@@ -28,9 +28,9 @@ public class GenMap
         {
             if (
                 !visited.Contains(neighbor)
-                && (current != ignored_link.start && neighbor != ignored_link.end)
-                && (current != ignored_link.end && neighbor != ignored_link.start)
-            ) // WARN: Not working method
+                && (current != ignored_link.start || neighbor != ignored_link.end)
+                && (current != ignored_link.end || neighbor != ignored_link.start)
+            )
             {
                 count += DeepSearch(neighbor, ignored_link, visited);
             }
