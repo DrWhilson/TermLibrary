@@ -8,27 +8,31 @@ public class GenMap
 
     private RuleMap rule_map { get; set; }
 
-    private bool CheckReachable(Node start_node, Node ignored_neighbour)
+    private bool CheckReachable(Node start_node, (Node start, Node end) ignored_link)
     {
-        if (start_node == null)
+        if (start_node == null || ignored_link.start == null || ignored_link.end == null)
             return false;
 
         HashSet<Node> visited = new HashSet<Node>();
 
-        return DeepSearch(start_node, visited) == all_locations.Count;
+        return DeepSearch(start_node, (ignored_link.start, ignored_link.end), visited)
+            == all_locations.Count;
     }
 
-    private int DeepSearch(Node current, HashSet<Node> visited)
+    private int DeepSearch(Node current, (Node start, Node end) ignored_link, HashSet<Node> visited)
     {
-        // TODO: Check ignored link
         visited.Add(current);
         int count = 1;
 
         foreach (Node neighbor in current.GetAllNeighbours())
         {
-            if (!visited.Contains(neighbor))
+            if (
+                !visited.Contains(neighbor)
+                && (current != ignored_link.start && neighbor != ignored_link.end)
+                && (current != ignored_link.end && neighbor != ignored_link.start)
+            ) // WARN: Not working method
             {
-                count += DeepSearch(neighbor, visited);
+                count += DeepSearch(neighbor, ignored_link, visited);
             }
         }
 
@@ -80,13 +84,10 @@ public class GenMap
                 TryLink(location, other_locations);
     }
 
-    private void DropLink(Node node1, Node node2, int percent)
+    private void DropLink(Node node1, Node node2)
     {
-        if (Random.Shared.Next(100) < percent)
-        {
-            node1.DropNeighbour(node2);
-            node2.DropNeighbour(node1);
-        }
+        node1.DropNeighbour(node2);
+        node2.DropNeighbour(node1);
     }
 
     private void DropSomeLinks(int percent)
@@ -96,9 +97,11 @@ public class GenMap
             List<Node> neighbour = location.GetAllNeighbours();
             for (int i = 0; i < neighbour.Count; i++)
             {
-                // TODO: Check connectivity
-                if (CheckReachable(location, neighbour[i]))
-                    DropLink(location, neighbour[i], percent);
+                if (
+                    Random.Shared.Next(100) < percent
+                    && CheckReachable(location, (location, neighbour[i]))
+                )
+                    DropLink(location, neighbour[i]);
             }
         }
     }
