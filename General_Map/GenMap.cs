@@ -1,3 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 using maps;
 
 namespace TermLibrary.General_Map;
@@ -106,17 +109,42 @@ public class GenMap
         }
     }
 
+    private void SaveGraph()
+    {
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        string folder_name = "Saves";
+        string file_name = "rule_map_graph.json";
+
+        string folder_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder_name);
+
+        if (!Directory.Exists(folder_path))
+        {
+            Directory.CreateDirectory(folder_path);
+        }
+
+        string full_path = Path.Combine(folder_path, file_name);
+
+        string jsonString = JsonSerializer.Serialize(all_locations, options);
+        File.WriteAllText(full_path, jsonString);
+    }
+
     public GenMap()
     {
+        // TODO: Check save map
+
         string path = @"rule.json";
         rule_map = RuleMap.LoadFromFile(path);
 
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);
 
-        // TODO: Check save map
         GenerateBaseMap();
 
-        // TODO: Save map
+        SaveGraph();
     }
 }

@@ -1,9 +1,14 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace TermLibrary.General_Map;
 
 public class Node
 {
+    [JsonInclude]
     private string name { get; set; }
 
+    [JsonInclude]
     private List<Node> links { get; set; } = new List<Node>();
 
     public void AddNewNeighbor(Node newNode)
