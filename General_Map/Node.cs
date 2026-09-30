@@ -6,7 +6,7 @@ namespace TermLibrary.General_Map;
 public class Node
 {
     [JsonInclude]
-    private string name { get; set; }
+    private string name { get; set; } = string.Empty;
 
     [JsonInclude]
     private List<Node> links { get; set; } = new List<Node>();
@@ -34,6 +34,8 @@ public class Node
     {
         return this.name;
     }
+
+    public Node() { }
 
     public Node(string new_name)
     {

@@ -133,12 +133,36 @@ public class GenMap
         File.WriteAllText(full_path, jsonString);
     }
 
-    public GenMap()
+    bool LoadGraph()
     {
-        // TODO: Check save map
+        string folder_name = "Saves";
+        string file_name = "rule_map_graph.json";
 
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        string folder_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder_name);
+
+        if (!Directory.Exists(folder_path)) return false;
+
+        string full_path = Path.Combine(folder_path, file_name);
+
+        string readJson = File.ReadAllText(full_path);
+        var restoredGraph = JsonSerializer.Deserialize<List<Node>>(readJson, options);
+
+        if (restoredGraph != null) all_locations = restoredGraph;
+        else return false;
+
+        return true;
+    }
+    public GenMap(bool force_regen = false)
+    {
         string path = @"rule.json";
         rule_map = RuleMap.LoadFromFile(path);
+
+        if (!force_regen && LoadGraph()) return;
 
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);
