@@ -109,7 +109,7 @@ public class GenMap
         }
     }
 
-    private void SaveGraph()
+    private void SaveGraph(string file_name = "rule_map_graph.json")
     {
         var options = new JsonSerializerOptions
         {
@@ -118,7 +118,6 @@ public class GenMap
         };
 
         string folder_name = "Saves";
-        string file_name = "rule_map_graph.json";
 
         string folder_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder_name);
 
@@ -133,10 +132,9 @@ public class GenMap
         File.WriteAllText(full_path, jsonString);
     }
 
-    bool LoadGraph()
+    bool LoadGraph(string file_name = "rule_map_graph.json")
     {
         string folder_name = "Saves";
-        string file_name = "rule_map_graph.json";
 
         var options = new JsonSerializerOptions
         {
