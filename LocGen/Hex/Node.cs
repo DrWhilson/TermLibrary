@@ -1,1 +1,0 @@
-namespace TermLibrary.LocGen.Hex;
