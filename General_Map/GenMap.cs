@@ -1,13 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 using maps;
 
 namespace TermLibrary.General_Map;
 
 public class GenMap
 {
-    private List<Node> all_locations { get; set; } = new List<Node>();
+    public List<Node> all_locations { get; private set; } = new List<Node>();
 
     private RuleMap rule_map { get; set; }
 
@@ -27,7 +26,7 @@ public class GenMap
         visited.Add(current);
         int count = 1;
 
-        foreach (Node neighbor in current.GetAllNeighbours())
+        foreach (Node neighbor in current.links)
         {
             if (
                 !visited.Contains(neighbor)
@@ -73,7 +72,7 @@ public class GenMap
         if (node1 == node2)
             return;
 
-        if (!rule_map.GetLinksFor(node1.GetName()).Contains(node2.GetName()))
+        if (!rule_map.GetLinksFor(node1.name).Contains(node2.name)) //WARN: Check Contains method
             return;
 
         node1.AddNewNeighbor(node2);
@@ -97,7 +96,7 @@ public class GenMap
     {
         foreach (Node location in all_locations)
         {
-            List<Node> neighbour = location.GetAllNeighbours();
+            List<Node> neighbour = location.links;
             for (int i = 0; i < neighbour.Count; i++)
             {
                 if (
@@ -114,7 +113,7 @@ public class GenMap
         var options = new JsonSerializerOptions
         {
             WriteIndented = true,
-            ReferenceHandler = ReferenceHandler.Preserve
+            ReferenceHandler = ReferenceHandler.Preserve,
         };
 
         string folder_name = "Saves";
@@ -136,31 +135,33 @@ public class GenMap
     {
         string folder_name = "Saves";
 
-        var options = new JsonSerializerOptions
-        {
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
+        var options = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
 
         string folder_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder_name);
 
-        if (!Directory.Exists(folder_path)) return false;
+        if (!Directory.Exists(folder_path))
+            return false;
 
         string full_path = Path.Combine(folder_path, file_name);
 
         string readJson = File.ReadAllText(full_path);
         var restoredGraph = JsonSerializer.Deserialize<List<Node>>(readJson, options);
 
-        if (restoredGraph != null) all_locations = restoredGraph;
-        else return false;
+        if (restoredGraph != null)
+            all_locations = restoredGraph;
+        else
+            return false;
 
         return true;
     }
+
     public GenMap(bool force_regen = false)
     {
         string path = @"rule.json";
         rule_map = RuleMap.LoadFromFile(path);
 
-        if (!force_regen && LoadGraph()) return;
+        if (!force_regen && LoadGraph())
+            return;
 
         Node start_hex = new Node("Hex");
         all_locations.Add(start_hex);

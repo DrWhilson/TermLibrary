@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace TermLibrary.General_Map;
@@ -6,20 +5,15 @@ namespace TermLibrary.General_Map;
 public class Node
 {
     [JsonInclude]
-    private string name { get; set; } = string.Empty;
+    public string name { get; private set; } = string.Empty;
 
     [JsonInclude]
-    private List<Node> links { get; set; } = new List<Node>();
+    public List<Node> links { get; private set; } = new List<Node>();
 
     public void AddNewNeighbor(Node newNode)
     {
         if (newNode != null)
             links.Add(newNode);
-    }
-
-    public List<Node> GetAllNeighbours()
-    {
-        return links;
     }
 
     public void DropNeighbour(Node neighbour)
@@ -28,11 +22,6 @@ public class Node
             return;
 
         links.Remove(neighbour);
-    }
-
-    public string GetName()
-    {
-        return this.name;
     }
 
     public Node() { }
