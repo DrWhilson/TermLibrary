@@ -1,4 +1,4 @@
-namespace TermLibrary.LocNodes;
+namespace TermLibrary.HexNodes;
 
 public class HexCorridor : Node
 {

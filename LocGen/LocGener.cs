@@ -1,6 +1,3 @@
-// using TermLibrary.General_Map;
-using TermLibrary.LocNodes;
-
 namespace TermLibrary.LocGener;
 
 class LocGener
