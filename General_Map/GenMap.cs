@@ -72,7 +72,7 @@ public class GenMap
         if (node1 == node2)
             return;
 
-        if (!rule_map.GetLinksFor(node1.name).Contains(node2.name)) //WARN: Check Contains method
+        if (!rule_map.GetLinksFor(node1.name).Contains(node2.name))
             return;
 
         node1.AddNewNeighbor(node2);
