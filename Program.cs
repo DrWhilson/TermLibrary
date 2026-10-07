@@ -1,5 +1,5 @@
 ﻿using TermLibrary.General_Map;
-using TermLibrary.LocGener;
+using TermLibrary.LocController;
 
 class Program
 {
@@ -7,6 +7,6 @@ class Program
     {
         GenMap gen_map = new GenMap();
 
-        LocGener loc_gener = new LocGener(gen_map.all_locations);
+        LocController loc_gener = new LocController(gen_map.all_locations);
     }
 }

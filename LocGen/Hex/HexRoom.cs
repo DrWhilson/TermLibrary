@@ -6,8 +6,9 @@ public class HexRoom : Node
 
     // public Node[] updown_neighbors { get; private set; } = new Node[2]; //TODO: return it!
 
-    public HexRoom()
+    public HexRoom(int new_id)
     {
         name = "Hex";
+        id = new_id;
     }
 }
