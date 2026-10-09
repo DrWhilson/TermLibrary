@@ -4,8 +4,8 @@ namespace TermLibrary.SubLocGener;
 
 class HexGener
 {
-
     // public static HexRoom GrownRecur(HexRoom center, int curr_layer, int curr_id) //TODO: gen with recurs
+
     public static HexRoom GenerateCurcles(int num_layers)
     {
         HexRoom base_room = new HexRoom(0);
@@ -33,6 +33,23 @@ class HexGener
                 id_counter++;
             }
 
+            // Link rooms within
+            for (int j = 0; j < num_new_rooms; j++) // Loop new corridors
+            {
+                new_cycle_rooms[j].AddNeighbour(new_cycle_corridors[j]);
+                new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[j]);
+
+                if (j == num_new_rooms - 1)
+                {
+                    new_cycle_rooms[0].AddNeighbour(new_cycle_corridors[j]);
+                    new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[0]);
+                }
+                else
+                {
+                    new_cycle_rooms[j + 1].AddNeighbour(new_cycle_corridors[j]);
+                    new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[j + 1]);
+                }
+            }
 
         }
         return base_room;
