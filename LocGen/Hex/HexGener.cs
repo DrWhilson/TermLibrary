@@ -4,9 +4,27 @@ namespace TermLibrary.SubLocGener;
 
 class HexGener
 {
-    // public static HexRoom GrownRecur(HexRoom center, int curr_layer, int curr_id) //TODO: gen with recurs
+    public static List<HexRoom> FindOuterCircle(
+        List<HexRoom> curr_circle,
+        HashSet<HexRoom> visited_rooms
+    )
+    {
+        List<HexRoom> new_outer = new List<HexRoom>();
 
-    public static HexRoom GenerateCurcles(int num_layers)
+        foreach (HexRoom room in curr_circle)
+        {
+            new_outer = room.GetNextRooms().Where(val => !visited_rooms.Contains(val)).ToList();
+
+            visited_rooms.UnionWith(new_outer);
+        }
+
+        if (new_outer.Any())
+            curr_circle = FindOuterCircle(new_outer, visited_rooms);
+
+        return curr_circle;
+    }
+
+    public static HexRoom GenerateCircles(int num_layers)
     {
         HexRoom base_room = new HexRoom(0);
 
@@ -51,6 +69,13 @@ class HexGener
                 }
             }
 
+            // Find outer circle
+            HashSet<HexRoom> visited_nodes = new HashSet<HexRoom>();
+            visited_nodes.Add(base_room);
+            List<HexRoom> outer_nodes = new List<HexRoom>();
+            outer_nodes.Add(base_room);
+
+            outer_nodes = FindOuterCircle(outer_nodes, visited_nodes);
         }
         return base_room;
     }
