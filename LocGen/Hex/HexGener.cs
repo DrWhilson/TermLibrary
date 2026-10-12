@@ -29,11 +29,11 @@ class HexGener
         HexRoom base_room = new HexRoom(0);
 
         int id_counter = 1;
-        for (int i = 0; i < num_layers; i++)
+        for (int i = 1; i <= num_layers; i++)
         {
             // Count how much rooms
-            int num_new_rooms = 6 * num_layers;
-            int num_new_corr = num_new_rooms + (6 * (1 + 2 * num_layers));
+            int num_new_rooms = 6 * i;
+            int num_new_corr = num_new_rooms + (6 * (1 + 2 * (i - 1)));
 
             // Gen rooms without licking
             HexRoom[] new_cycle_rooms = new HexRoom[num_new_rooms];
@@ -47,7 +47,7 @@ class HexGener
             for (int j = 0; j < num_new_corr; j++)
             {
                 HexCorridor new_corridor = new HexCorridor(id_counter);
-                new_cycle_corridors[i] = new_corridor;
+                new_cycle_corridors[j] = new_corridor;
                 id_counter++;
             }
 
