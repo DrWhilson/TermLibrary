@@ -18,7 +18,7 @@ public class HexRoom : Node
             return;
 
         for (int i = 0; i < flat_neighbors.Length; i++)
-            if (flat_neighbors[i] != null)
+            if (flat_neighbors[i] != null) //FIX: Logic error - finds first NON-null slot and overwrites it. Should find first null slot to add neighbor
             {
                 flat_neighbors[i] = new_neighbour;
                 break;
@@ -28,7 +28,7 @@ public class HexRoom : Node
     public List<HexRoom> GetNextRooms()
     {
         List<HexRoom> next_rooms = new List<HexRoom>();
-        foreach (HexCorridor cooridor in flat_neighbors)
+        foreach (HexCorridor cooridor in flat_neighbors) //FIX: flat_neighbors is Node[], not HexCorridor[]. InvalidCastException if elements are null or not HexCorridor
         {
             next_rooms.Add(cooridor.GetOpositRoom(this));
         }

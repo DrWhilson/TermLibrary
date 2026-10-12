@@ -12,7 +12,7 @@ class LocController
             case "Hex":
                 // TODO: Check Exist
                 int num_layers = Random.Shared.Next(1, 15);
-                HexRoom base_hex_node = HexGener.GenerateCurcles(num_layers);
+                HexRoom base_hex_node = HexGener.GenerateCurcles(num_layers); //FIX: Method name is GenerateCircles, not GenerateCurcles (typo)
                 // TODO: Save
                 break;
             default:

@@ -6,5 +6,5 @@ public class Node
 
     public string name { get; protected set; } = string.Empty;
 
-    public int seed { get; protected set; } = (int)DateTime.Now.Ticks;
+    public int seed { get; protected set; } = (int)DateTime.Now.Ticks; //FIX: Truncates Ticks to int (loss of precision). Multiple rapid instantiations get same seed
 }

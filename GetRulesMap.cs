@@ -36,12 +36,12 @@ namespace maps
             string projectRoot = Path.GetFullPath(Path.Combine(exePath, @"..\..\..\"));
             string filePath = Path.Combine(projectRoot, file_path);
 
-            if (!File.Exists(file_path))
+            if (!File.Exists(filePath)) //FIX: Was checking file_path instead of resolved filePath
             {
-                throw new FileNotFoundException($"File {file_path} does not exist");
+                throw new FileNotFoundException($"File {filePath} does not exist");
             }
 
-            string json_string = File.ReadAllText(file_path);
+            string json_string = File.ReadAllText(filePath); //FIX: Was reading from file_path instead of resolved filePath
             return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options)!;
         }
 
@@ -54,7 +54,7 @@ namespace maps
                     targets.Add(link.target);
 
                 if (string.Equals(link.target, sourceNode, StringComparison.OrdinalIgnoreCase))
-                    targets.Add(link.source);
+                    targets.Add(link.source); //FIX: Returns bidirectional links. JSON defines directed links (source->target), this makes graph undirected
             }
             return targets;
         }

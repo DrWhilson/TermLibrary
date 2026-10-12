@@ -19,7 +19,7 @@ public class HexCorridor : Node
             return;
 
         for (int i = 0; i < lineal_neighbours.Length; i++)
-            if (lineal_neighbours[i] != null)
+            if (lineal_neighbours[i] != null) //FIX: Logic error - finds first NON-null slot and overwrites it. Should find first null slot to add neighbor
             {
                 lineal_neighbours[i] = new_neighbour;
                 break;

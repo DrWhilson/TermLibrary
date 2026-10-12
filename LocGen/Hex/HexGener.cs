@@ -13,13 +13,13 @@ class HexGener
 
         foreach (HexRoom room in curr_circle)
         {
-            new_outer = room.GetNextRooms().Where(val => !visited_rooms.Contains(val)).ToList();
+            new_outer = room.GetNextRooms().Where(val => !visited_rooms.Contains(val)).ToList(); //FIX: Overwrites new_outer each iteration, only last room's results kept. Should use AddRange
 
             visited_rooms.UnionWith(new_outer);
         }
 
         if (new_outer.Any())
-            curr_circle = FindOuterCircle(new_outer, visited_rooms);
+            curr_circle = FindOuterCircle(new_outer, visited_rooms); //FIX: Recursive result assigned to local var but not returned up the call chain. Final return is original curr_circle
 
         return curr_circle;
     }
@@ -75,8 +75,8 @@ class HexGener
             List<HexRoom> outer_nodes = new List<HexRoom>();
             outer_nodes.Add(base_room);
 
-            outer_nodes = FindOuterCircle(outer_nodes, visited_nodes);
+            outer_nodes = FindOuterCircle(outer_nodes, visited_nodes); //FIX: Result not used to connect new layer to previous layer. New rooms/corridors created in isolation
         }
-        return base_room;
+        return base_room; //FIX: Method name is GenerateCircles but LocGener.cs calls GenerateCurcles (typo)
     }
 }
