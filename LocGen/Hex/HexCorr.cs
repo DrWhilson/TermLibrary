@@ -3,6 +3,7 @@ namespace TermLibrary.HexNodes;
 public class HexCorridor : Node
 {
     public bool IsDeadEnd { get; set; } = false;
+    public bool IsRestRoom { get; set; } = false;
     public HexRoom[] lineal_neighbours = new HexRoom[2];
 
     // public Node stairs_neighbours = new Node();
@@ -19,7 +20,7 @@ public class HexCorridor : Node
             return;
 
         for (int i = 0; i < lineal_neighbours.Length; i++)
-            if (lineal_neighbours[i] != null) //FIX: Logic error - finds first NON-null slot and overwrites it. Should find first null slot to add neighbor
+            if (lineal_neighbours[i] == null)
             {
                 lineal_neighbours[i] = new_neighbour;
                 break;

@@ -18,7 +18,7 @@ public class GenMap
         HashSet<Node> visited = new HashSet<Node>();
 
         return DeepSearch(start_node, (ignored_link.start, ignored_link.end), visited)
-            == all_locations.Count; //FIX: Assumes graph is fully connected from start_node. During DropSomeLinks, nodes may already be disconnected making count mismatch
+            == all_locations.Count;
     }
 
     private int DeepSearch(Node current, (Node start, Node end) ignored_link, HashSet<Node> visited)
@@ -44,7 +44,7 @@ public class GenMap
     private void GenerateBaseMap()
     {
         Node start_hex = new Node("Hex");
-        all_locations.Add(start_hex); //FIX: Constructor already adds a "Hex" node before calling this, creating duplicate
+        all_locations.Add(start_hex);
 
         GenerateNodes(); // Gen couple of locations
 
@@ -59,7 +59,7 @@ public class GenMap
 
         foreach (string unique_location in posible_locations)
         {
-            for (int i = 0; i < Random.Shared.Next(3, 8); i++) // Random number of any locations //FIX: Creates multiple nodes with same name. Linking logic uses names, may cause ambiguity
+            for (int i = 0; i < Random.Shared.Next(3, 8); i++) // Random number of any location
             {
                 Node newLocation = new Node(unique_location);
                 all_locations.Add(newLocation);
@@ -162,9 +162,6 @@ public class GenMap
 
         if (!force_regen && LoadGraph())
             return;
-
-        Node start_hex = new Node("Hex");
-        all_locations.Add(start_hex); //FIX: GenerateBaseMap() also creates a "Hex" node, resulting in duplicate "Hex" nodes when force_regen=true or LoadGraph fails
 
         GenerateBaseMap();
 

@@ -2,7 +2,7 @@ namespace TermLibrary.HexNodes;
 
 public class HexRoom : Node
 {
-    public Node[] flat_neighbors { get; private set; } = new Node[6];
+    public HexCorridor[] flat_neighbors { get; private set; } = new HexCorridor[6];
 
     // public Node[] updown_neighbors { get; private set; } = new Node[2]; //TODO: return it!
 
@@ -12,13 +12,13 @@ public class HexRoom : Node
         id = new_id;
     }
 
-    public void AddNeighbour(Node new_neighbour)
+    public void AddNeighbour(HexCorridor new_neighbour)
     {
         if (new_neighbour.name != "HexCorridor")
             return;
 
         for (int i = 0; i < flat_neighbors.Length; i++)
-            if (flat_neighbors[i] != null) //FIX: Logic error - finds first NON-null slot and overwrites it. Should find first null slot to add neighbor
+            if (flat_neighbors[i] == null)
             {
                 flat_neighbors[i] = new_neighbour;
                 break;
@@ -28,10 +28,10 @@ public class HexRoom : Node
     public List<HexRoom> GetNextRooms()
     {
         List<HexRoom> next_rooms = new List<HexRoom>();
-        foreach (HexCorridor cooridor in flat_neighbors) //FIX: flat_neighbors is Node[], not HexCorridor[]. InvalidCastException if elements are null or not HexCorridor
+        foreach (HexCorridor cooridor in flat_neighbors)
         {
             next_rooms.Add(cooridor.GetOpositRoom(this));
         }
-        return next_rooms; //MUST BE LENGHT 6!
+        return next_rooms;
     }
 }

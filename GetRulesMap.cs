@@ -30,18 +30,18 @@ namespace maps
             WriteIndented = true,
         };
 
-        public static RuleMap LoadFromFile(string file_path)
+        public static RuleMap LoadFromFile(string file_name)
         {
             string exePath = AppDomain.CurrentDomain.BaseDirectory;
             string projectRoot = Path.GetFullPath(Path.Combine(exePath, @"..\..\..\"));
-            string filePath = Path.Combine(projectRoot, file_path);
+            string file_path = Path.Combine(projectRoot, file_name);
 
-            if (!File.Exists(filePath)) //FIX: Was checking file_path instead of resolved filePath
+            if (!File.Exists(file_path))
             {
-                throw new FileNotFoundException($"File {filePath} does not exist");
+                throw new FileNotFoundException($"File {file_path} does not exist");
             }
 
-            string json_string = File.ReadAllText(filePath); //FIX: Was reading from file_path instead of resolved filePath
+            string json_string = File.ReadAllText(file_path);
             return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options)!;
         }
 
@@ -54,7 +54,7 @@ namespace maps
                     targets.Add(link.target);
 
                 if (string.Equals(link.target, sourceNode, StringComparison.OrdinalIgnoreCase))
-                    targets.Add(link.source); //FIX: Returns bidirectional links. JSON defines directed links (source->target), this makes graph undirected
+                    targets.Add(link.source); //WARN: Returns bidirectional links. JSON defines directed links (source->target), this makes graph undirected
             }
             return targets;
         }

@@ -12,8 +12,10 @@ public class Node
 
     public void AddNewNeighbor(Node newNode)
     {
-        if (newNode != null)
-            links.Add(newNode); //FIX: No duplicate check. Calling multiple times with same node adds duplicates to links list
+        if (newNode == null) return;
+        if (links.Contains(newNode)) return;
+
+        links.Add(newNode);
     }
 
     public void DropNeighbour(Node neighbour)
@@ -21,7 +23,7 @@ public class Node
         if (!links.Contains(neighbour))
             return;
 
-        links.Remove(neighbour); //FIX: Removes only first occurrence. If duplicates exist (see AddNewNeighbor), only one is removed
+        links.Remove(neighbour);
     }
 
     public Node() { }
