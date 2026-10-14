@@ -12,8 +12,10 @@ public class Node
 
     public void AddNewNeighbor(Node newNode)
     {
-        if (newNode == null) return;
-        if (links.Contains(newNode)) return;
+        if (newNode == null)
+            return;
+        if (links.Contains(newNode))
+            return;
 
         links.Add(newNode);
     }

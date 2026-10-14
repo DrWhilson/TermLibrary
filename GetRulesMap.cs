@@ -24,7 +24,7 @@ namespace maps
         [JsonInclude]
         private List<Link> Links { get; set; } = new List<Link>();
 
-        private static readonly JsonSerializerOptions jason_options = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions json_options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             WriteIndented = true,
@@ -42,7 +42,7 @@ namespace maps
             }
 
             string json_string = File.ReadAllText(file_path);
-            return JsonSerializer.Deserialize<RuleMap>(json_string, jason_options)!;
+            return JsonSerializer.Deserialize<RuleMap>(json_string, json_options)!;
         }
 
         public List<string> GetLinksFor(string sourceNode)
@@ -54,7 +54,7 @@ namespace maps
                     targets.Add(link.target);
 
                 if (string.Equals(link.target, sourceNode, StringComparison.OrdinalIgnoreCase))
-                    targets.Add(link.source); //WARN: Returns bidirectional links. JSON defines directed links (source->target), this makes graph undirected
+                    targets.Add(link.source);
             }
             return targets;
         }

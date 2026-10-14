@@ -29,9 +29,9 @@ public class HexRoom : Node
     {
         List<HexRoom> next_rooms = new List<HexRoom>();
         foreach (HexCorridor cooridor in flat_neighbors)
-        {
-            next_rooms.Add(cooridor.GetOpositRoom(this));
-        }
+            if (cooridor != null)
+                next_rooms.Add(cooridor.GetOpositRoom(this));
+
         return next_rooms;
     }
 }

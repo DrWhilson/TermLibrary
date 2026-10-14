@@ -1,5 +1,5 @@
-using TermLibrary.SubLocGener;
 using TermLibrary.HexNodes;
+using TermLibrary.SubLocGener;
 
 namespace TermLibrary.LocController;
 

@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+//FIX: Missing using System.IO for Path, Directory, File
+//FIX: Missing using System.Collections.Generic for List, HashSet
 using maps;
 
 namespace TermLibrary.General_Map;
@@ -83,7 +85,7 @@ public class GenMap
     {
         foreach (Node location in all_locations)
             foreach (Node other_locations in all_locations)
-                TryLink(location, other_locations); //FIX: Iterates all pairs including (A,B) and (B,A). TryLink adds bidirectional links, creating duplicate edges
+                TryLink(location, other_locations);
     }
 
     private void DropLink(Node node1, Node node2)
@@ -97,7 +99,7 @@ public class GenMap
         foreach (Node location in all_locations)
         {
             List<Node> neighbour = location.links; //FIX: This is a reference to the original list, not a copy. Modifying it during iteration causes issues
-            for (int i = 0; i < neighbour.Count; i++) //FIX: Dropping links modifies the list while iterating, causing index shifting and skipped elements
+            for (int i = 0; i < neighbour.Count; i++) //FIX: Dropping links modifies the list while iterating, causing index shifting and skipped elements. Iterate backwards or use a copy.
             {
                 if (
                     Random.Shared.Next(100) < percent

@@ -13,13 +13,15 @@ class HexGener
 
         foreach (HexRoom room in curr_circle)
         {
-            new_outer.AddRange(room.GetNextRooms().Where(val => !visited_rooms.Contains(val)).ToList());
+            new_outer.AddRange(
+                room.GetNextRooms().Where(val => !visited_rooms.Contains(val)).ToList()
+            );
 
             visited_rooms.UnionWith(new_outer);
         }
 
         if (new_outer.Any())
-            curr_circle = FindOuterCircle(new_outer, visited_rooms); //FIX: Recursive result assigned to local var but not returned up the call chain. Final return is original curr_circle
+            curr_circle = FindOuterCircle(new_outer, visited_rooms); //FIX: Recursive result assigned to local var but not returned up the call chain. Final return is original curr_circle. Should return the recursive call result.
 
         return curr_circle;
     }
