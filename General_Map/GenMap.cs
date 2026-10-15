@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-//FIX: Missing using System.IO for Path, Directory, File
-//FIX: Missing using System.Collections.Generic for List, HashSet
 using maps;
 
 namespace TermLibrary.General_Map;
@@ -98,14 +98,14 @@ public class GenMap
     {
         foreach (Node location in all_locations)
         {
-            List<Node> neighbour = location.links; //FIX: This is a reference to the original list, not a copy. Modifying it during iteration causes issues
-            for (int i = 0; i < neighbour.Count; i++) //FIX: Dropping links modifies the list while iterating, causing index shifting and skipped elements. Iterate backwards or use a copy.
+            List<Node> neighboursCopy = new List<Node>(location.links);
+            for (int i = neighboursCopy.Count - 1; i >= 0; i--)
             {
                 if (
                     Random.Shared.Next(100) < percent
-                    && CheckReachable(location, (location, neighbour[i]))
+                    && CheckReachable(location, (location, neighboursCopy[i]))
                 )
-                    DropLink(location, neighbour[i]);
+                    DropLink(location, neighboursCopy[i]);
             }
         }
     }

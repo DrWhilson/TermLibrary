@@ -21,7 +21,7 @@ class HexGener
         }
 
         if (new_outer.Any())
-            curr_circle = FindOuterCircle(new_outer, visited_rooms); //FIX: Recursive result assigned to local var but not returned up the call chain. Final return is original curr_circle. Should return the recursive call result.
+            return FindOuterCircle(new_outer, visited_rooms);
 
         return curr_circle;
     }
