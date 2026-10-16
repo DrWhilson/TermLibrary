@@ -11,8 +11,7 @@ class LocController
         {
             case "Hex":
                 // TODO: Check Exist
-                int num_layers = Random.Shared.Next(1, 15);
-                HexRoom base_hex_node = HexGener.GenerateCircles(num_layers);
+                HexGener.GenerateLevel();
                 // TODO: Save
                 break;
             default:

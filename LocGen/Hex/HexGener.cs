@@ -81,4 +81,10 @@ class HexGener
         }
         return base_room;
     }
+
+    public static void GenerateLevel()
+    {
+        int num_layers = Random.Shared.Next(1, 15);
+        HexRoom base_hex_node = GenerateCircles(num_layers);
+    }
 }
