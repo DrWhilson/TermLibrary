@@ -51,6 +51,8 @@ class HexGener
             }
 
             // ==Connect circles==
+            if (outer_nodes.Contains(base_room)) { foreach (HexRoom room in new_cycle_rooms) { } }
+
             int step_new = num_new_rooms / 6;
             int step_old = outer_nodes.Count / 6;
 

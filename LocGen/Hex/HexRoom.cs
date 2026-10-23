@@ -25,6 +25,16 @@ public class HexRoom : Node
             }
     }
 
+    public void AddNeighbour(HexRoom new_neighbour)
+    {
+        if (new_neighbour.name != "HexRoom" || GetNextRooms().Contains(new_neighbour)) return;
+
+        HexCorridor conection_corridor = new HexCorridor();
+
+        this.AddNeighbour(conection_corridor);
+        new_neighbour.AddNeighbour(conection_corridor);
+    }
+
     public List<HexRoom> GetNextRooms()
     {
         List<HexRoom> next_rooms = new List<HexRoom>();

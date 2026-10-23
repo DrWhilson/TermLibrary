@@ -13,6 +13,11 @@ public class HexCorridor : Node
         id = new_id;
         name = "HexCorridor";
     }
+    public HexCorridor()
+    {
+        id = -1; // WARN: placeholder for Insignificant id 
+        name = "HexCorridor";
+    }
 
     public void AddNeighbour(HexRoom new_neighbour)
     {
