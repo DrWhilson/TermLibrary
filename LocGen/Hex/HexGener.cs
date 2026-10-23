@@ -14,41 +14,15 @@ class HexGener
         {
             // ==Count how much rooms==
             int num_new_rooms = 6 * i;
-            int num_new_corr = num_new_rooms + (6 * (1 + 2 * (i - 1)));
 
             // ==Gen rooms without licking==
             HexRoom[] new_cycle_rooms = new HexRoom[num_new_rooms];
             for (int j = 0; j < num_new_rooms; j++)
-            {
-                HexRoom new_room = new HexRoom(id_counter);
-                new_cycle_rooms[j] = new_room;
-                id_counter++;
-            }
-            HexCorridor[] new_cycle_corridors = new HexCorridor[num_new_corr];
-            for (int j = 0; j < num_new_corr; j++)
-            {
-                HexCorridor new_corridor = new HexCorridor(id_counter);
-                new_cycle_corridors[j] = new_corridor;
-                id_counter++;
-            }
+                new_cycle_rooms[j] = new HexRoom(id_counter++);
 
             // ==Link rooms within==
             for (int j = 0; j < num_new_rooms; j++) // Loop new corridors
-            {
-                new_cycle_rooms[j].AddNeighbour(new_cycle_corridors[j]);
-                new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[j]);
-
-                if (j == num_new_rooms - 1)
-                {
-                    new_cycle_rooms[0].AddNeighbour(new_cycle_corridors[j]);
-                    new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[0]);
-                }
-                else
-                {
-                    new_cycle_rooms[j + 1].AddNeighbour(new_cycle_corridors[j]);
-                    new_cycle_corridors[j].AddNeighbour(new_cycle_rooms[j + 1]);
-                }
-            }
+                new_cycle_rooms[j].AddNeighbour(new_cycle_rooms[(j + 1) % num_new_rooms]);
 
             // ==Connect circles==
             if (outer_nodes.Contains(base_room)) { foreach (HexRoom room in new_cycle_rooms) { } }
