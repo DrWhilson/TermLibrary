@@ -25,7 +25,11 @@ class HexGener
                 new_cycle_rooms[j].AddNeighbour(new_cycle_rooms[(j + 1) % num_new_rooms]);
 
             // ==Connect circles==
-            if (outer_nodes.Contains(base_room)) { foreach (HexRoom room in new_cycle_rooms) { } }
+            if (outer_nodes.Contains(base_room))
+            {
+                foreach (HexRoom room in new_cycle_rooms) base_room.AddNeighbour(room);
+                continue;
+            }
 
             int step_new = num_new_rooms / 6;
             int step_old = outer_nodes.Count / 6;
