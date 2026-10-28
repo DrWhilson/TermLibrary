@@ -35,9 +35,9 @@ class HexGener
 
             for (int j = 0; j < num_new_rooms; j++)
             {
-                if (j % step_btw_hex == 0)
-                    new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex)]); //Connect diagonals
-
+                new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex)]);
+                if (j % step_btw_hex != 0)
+                    new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex) - 1]);
             }
 
             // ==Redefine outer_nodes==
