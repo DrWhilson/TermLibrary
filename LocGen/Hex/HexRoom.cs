@@ -2,6 +2,7 @@ namespace TermLibrary.HexNodes;
 
 public class HexRoom : Node
 {
+    public int layer_id { get; private set; } = 0;
     public HexCorridor[] flat_neighbors { get; private set; } = new HexCorridor[6];
 
     // public Node[] updown_neighbors { get; private set; } = new Node[2]; //TODO: return it!
@@ -10,6 +11,13 @@ public class HexRoom : Node
     {
         name = "HexRoom";
         id = new_id;
+    }
+
+    public HexRoom(int new_id, int new_layer_id)
+    {
+        name = "HexRoom";
+        id = new_id;
+        layer_id = new_layer_id;
     }
 
     public void AddNeighbour(HexCorridor new_neighbour)

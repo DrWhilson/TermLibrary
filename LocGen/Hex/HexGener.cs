@@ -4,7 +4,7 @@ namespace TermLibrary.SubLocGener;
 
 class HexGener
 {
-    public static HexRoom GenerateCircles(int num_layers)
+    private static HexRoom GenerateCircles(int num_layers)
     {
         HexRoom base_room = new HexRoom(0);
         List<HexRoom> outer_nodes = [base_room];
@@ -46,9 +46,15 @@ class HexGener
         return base_room;
     }
 
+    private static HexRoom GenerateLayers(int num_layers)
+    {
+        HexRoom base_room = GenerateCircles(num_layers);
+        return base_room;
+    }
+
     public static void GenerateLevel()
     {
         int num_layers = Random.Shared.Next(1, 15);
-        HexRoom base_hex_node = GenerateCircles(num_layers);
+        HexRoom base_room = GenerateLayers(num_layers);
     }
 }
