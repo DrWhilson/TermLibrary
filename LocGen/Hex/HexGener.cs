@@ -31,12 +31,13 @@ class HexGener
                 continue;
             }
 
-            int step_new = num_new_rooms / 6;
-            int step_old = outer_nodes.Count / 6;
+            int step_btw_hex = num_new_rooms / 6;
 
-            for (int outer_stepper = 0, inner_steper = 0; outer_stepper < num_new_rooms; outer_stepper += step_new, inner_steper += step_old)
+            for (int j = 0; j < num_new_rooms; j++)
             {
-                // TODO: connect nodes
+                if (j % step_btw_hex == 0)
+                    new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex)]); //Connect diagonals
+
             }
 
             // ==Redefine outer_nodes==
