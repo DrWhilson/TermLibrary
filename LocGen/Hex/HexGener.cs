@@ -4,9 +4,9 @@ namespace TermLibrary.SubLocGener;
 
 class HexGener
 {
-    private static HexRoom GenerateCircles(int num_layers)
+    private static HexRoom GenerateCircles(int num_layers, int layer_id)
     {
-        HexRoom base_room = new HexRoom(0);
+        HexRoom base_room = new HexRoom(0, layer_id);
         List<HexRoom> outer_nodes = [base_room];
 
         int id_counter = 1;
@@ -18,7 +18,7 @@ class HexGener
             // ==Gen rooms without licking==
             HexRoom[] new_cycle_rooms = new HexRoom[num_new_rooms];
             for (int j = 0; j < num_new_rooms; j++)
-                new_cycle_rooms[j] = new HexRoom(id_counter++);
+                new_cycle_rooms[j] = new HexRoom(id_counter++, layer_id);
 
             // ==Link rooms within==
             for (int j = 0; j < num_new_rooms; j++) // Loop new corridors
@@ -48,7 +48,16 @@ class HexGener
 
     private static HexRoom GenerateLayers(int num_layers)
     {
-        HexRoom base_room = GenerateCircles(num_layers);
+        HexRoom base_room = GenerateCircles(num_layers, 0);
+        List<HexRoom> layers = [base_room];
+
+        for (int i = -num_layers / 2; i <= num_layers / 2; i++)
+        {
+            if (i == 0) continue;
+            layers.Add(GenerateCircles(num_layers, i));
+        }
+
+        //TODO: conect layers
         return base_room;
     }
 
