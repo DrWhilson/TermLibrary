@@ -56,6 +56,7 @@ class HexGener
             if (i == 0) continue;
             layers.Add(GenerateCircles(num_layers, i));
         }
+        layers.Sort((x, y) => x.layer_id.CompareTo(y.layer_id));
 
         //TODO: conect layers
         return base_room;
