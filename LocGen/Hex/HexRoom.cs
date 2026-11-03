@@ -5,7 +5,7 @@ public class HexRoom : Node
     public int layer_id { get; private set; } = 0;
     public HexCorridor[] flat_neighbors { get; private set; } = new HexCorridor[6];
 
-    // public Node[] updown_neighbors { get; private set; } = new Node[2]; //TODO: return it!
+    public Node[] updown_neighbors { get; private set; } = new Node[2];
 
     public HexRoom(int new_id)
     {

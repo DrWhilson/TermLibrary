@@ -46,6 +46,10 @@ class HexGener
         return base_room;
     }
 
+    private static void ConectLayers(HexRoom base_room_1, HexRoom base_room_2)
+    {
+        //TODO: Connect by ID
+    }
     private static HexRoom GenerateLayers(int num_layers)
     {
         HexRoom base_room = GenerateCircles(num_layers, 0);
@@ -58,7 +62,10 @@ class HexGener
         }
         layers.Sort((x, y) => x.layer_id.CompareTo(y.layer_id));
 
-        //TODO: conect layers
+        for (int i = 0; i < layers.Count - 1; i++)
+        {
+
+        }
         return base_room;
     }
 
