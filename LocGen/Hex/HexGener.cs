@@ -27,7 +27,8 @@ class HexGener
             // ==Connect circles==
             if (outer_nodes.Contains(base_room))
             {
-                foreach (HexRoom room in new_cycle_rooms) base_room.AddNeighbour(room);
+                foreach (HexRoom room in new_cycle_rooms)
+                    base_room.AddNeighbour(room);
                 continue;
             }
 
@@ -50,6 +51,7 @@ class HexGener
     {
         //TODO: Connect by ID
     }
+
     private static HexRoom GenerateLayers(int num_layers)
     {
         HexRoom base_room = GenerateCircles(num_layers, 0);
@@ -57,15 +59,13 @@ class HexGener
 
         for (int i = -num_layers / 2; i <= num_layers / 2; i++)
         {
-            if (i == 0) continue;
+            if (i == 0)
+                continue;
             layers.Add(GenerateCircles(num_layers, i));
         }
         layers.Sort((x, y) => x.layer_id.CompareTo(y.layer_id));
 
-        for (int i = 0; i < layers.Count - 1; i++)
-        {
-
-        }
+        for (int i = 0; i < layers.Count - 1; i++) { }
         return base_room;
     }
 

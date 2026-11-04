@@ -5,7 +5,8 @@ public class HexRoom : Node
     public int layer_id { get; private set; } = 0;
     public HexCorridor[] flat_neighbors { get; private set; } = new HexCorridor[6];
 
-    public Node[] updown_neighbors { get; private set; } = new Node[2];
+    public HexRoom up_neighbor { get; private set; }
+    public HexRoom down_neighbor { get; private set; }
 
     public HexRoom(int new_id)
     {
@@ -35,12 +36,29 @@ public class HexRoom : Node
 
     public void AddNeighbour(HexRoom new_neighbour)
     {
-        if (new_neighbour.name != "HexRoom" || GetNextRooms().Contains(new_neighbour)) return;
+        if (new_neighbour.name != "HexRoom" || GetNextRooms().Contains(new_neighbour))
+            return;
 
         HexCorridor conection_corridor = new HexCorridor();
 
         this.AddNeighbour(conection_corridor);
         new_neighbour.AddNeighbour(conection_corridor);
+    }
+
+    public void AddNeighbourUp(HexRoom new_neighbour)
+    {
+        if (new_neighbour.name != "HexRoom" || up_neighbor == new_neighbour)
+            return;
+
+        up_neighbor = new_neighbour;
+    }
+
+    public void AddNeighbourDown(HexRoom new_neighbour)
+    {
+        if (new_neighbour.name != "HexRoom" || down_neighbor == new_neighbour)
+            return;
+
+        down_neighbor = new_neighbour;
     }
 
     public List<HexRoom> GetNextRooms()
