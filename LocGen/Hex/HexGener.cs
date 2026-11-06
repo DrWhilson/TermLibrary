@@ -79,6 +79,12 @@ class HexGener
     {
         List<HexRoom> all_nodes_1 = DeepSearch(base_room_1);
         List<HexRoom> all_nodes_2 = DeepSearch(base_room_2);
+
+        var layer_2 = all_nodes_2.ToDictionary(b => b.id);
+
+        foreach (HexRoom room_a in all_nodes_1)
+            if (layer_2.TryGetValue(room_a.id, out var room_b))
+                room_a.AddNeighbourUp(room_b);
     }
 
     private static HexRoom GenerateLayers(int num_layers)
