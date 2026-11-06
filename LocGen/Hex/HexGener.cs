@@ -47,7 +47,7 @@ class HexGener
         return base_room;
     }
 
-    private static List<HexRoom> DeepSearch(HexRoom base_node)
+    public static List<HexRoom> DeepSearch(HexRoom base_node)
     {
         HashSet<HexRoom> visited_nodes = [base_node];
 
@@ -77,7 +77,8 @@ class HexGener
 
     private static void ConectLayers(HexRoom base_room_1, HexRoom base_room_2)
     {
-        //TODO: Connect by ID
+        List<HexRoom> all_nodes_1 = DeepSearch(base_room_1);
+        List<HexRoom> all_nodes_2 = DeepSearch(base_room_2);
     }
 
     private static HexRoom GenerateLayers(int num_layers)
@@ -93,7 +94,10 @@ class HexGener
         }
         layers.Sort((x, y) => x.layer_id.CompareTo(y.layer_id));
 
-        for (int i = 0; i < layers.Count - 1; i++) { }
+        for (int i = 0; i < layers.Count - 1; i++)
+        {
+            ConectLayers(layers[i], layers[i + 1]);
+        }
         return base_room;
     }
 
