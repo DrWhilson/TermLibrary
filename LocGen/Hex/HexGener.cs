@@ -47,6 +47,34 @@ class HexGener
         return base_room;
     }
 
+    private static List<HexRoom> DeepSearch(HexRoom base_node)
+    {
+        HashSet<HexRoom> visited_nodes = [base_node];
+
+        List<HexRoom> curr_layer = [base_node];
+
+        DeepSearch(curr_layer, visited_nodes);
+
+        return visited_nodes.ToList();
+    }
+
+    private static List<HexRoom> DeepSearch(List<HexRoom> cur_layer, HashSet<HexRoom> visited_nodes)
+    {
+        foreach (HexRoom room in cur_layer)
+        {
+            List<HexRoom> new_rooms = room.GetNextRooms()
+                .Where(r => !visited_nodes.Contains(r))
+                .ToList();
+
+            cur_layer.AddRange(new_rooms);
+            visited_nodes.UnionWith(new_rooms);
+        }
+
+        if (cur_layer == null)
+            return visited_nodes.ToList();
+        return DeepSearch(cur_layer, visited_nodes);
+    }
+
     private static void ConectLayers(HexRoom base_room_1, HexRoom base_room_2)
     {
         //TODO: Connect by ID
