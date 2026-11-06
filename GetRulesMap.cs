@@ -56,7 +56,7 @@ namespace maps
                 if (string.Equals(link.target, sourceNode, StringComparison.OrdinalIgnoreCase))
                     targets.Add(link.source);
             }
-            return targets;
+            return targets; //FIX: GetLinksFor возвращает двунаправленные связи (и source->target, и target->source), может быть не так задумано если связи направленные
         }
 
         public List<string> GetAllNames()

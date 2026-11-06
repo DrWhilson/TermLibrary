@@ -6,5 +6,5 @@ public class Node
 
     public string name { get; protected set; } = string.Empty;
 
-    public int seed { get; protected set; } = (int)DateTime.Now.Ticks;
+    public long seed { get; protected set; } = DateTime.UtcNow.Ticks;
 }

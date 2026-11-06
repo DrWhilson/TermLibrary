@@ -75,7 +75,7 @@ public class GenMap
             return;
 
         if (!rule_map.GetLinksFor(node1.name).Contains(node2.name))
-            return; //FIX: GetLinksFor returns bidirectional links, may allow unintended connections
+            return; //FIX: GetLinksFor возвращает двунаправленные связи, может разрешить нежелательные соединения
 
         node1.AddNewNeighbor(node2);
         node2.AddNewNeighbor(node1);
@@ -85,7 +85,7 @@ public class GenMap
     {
         foreach (Node location in all_locations)
             foreach (Node other_locations in all_locations)
-                TryLink(location, other_locations);
+                TryLink(location, other_locations); //FIX: O(n^2) сложность, пытается связать каждый узел с каждым, очень неэффективно для больших карт
     }
 
     private void DropLink(Node node1, Node node2)
@@ -103,11 +103,12 @@ public class GenMap
             {
                 if (
                     Random.Shared.Next(100) < percent
-                    && CheckReachable(location, (location, neighboursCopy[i]))
+                    && CheckReachable(location, (location, neighboursCopy[i])) //FIX: CheckReachable вызывается для КАЖДОГО потенциального удаления, делает полный DFS O(n) - очень дорого при большом графе
                 )
                     DropLink(location, neighboursCopy[i]);
             }
         }
+        //FIX: Каждая связь проверяется дважды (от node1 к node2 и от node2 к node1), возможен double-drop или лишние проверки
     }
 
     private void SaveGraph(string file_name = "rule_map_graph.json")
@@ -137,7 +138,7 @@ public class GenMap
     {
         string folder_name = "Saves";
 
-        var options = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve };
+        var options = new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve }; //FIX: Десериализация с ReferenceHandler.Preserve требует, чтобы JSON был сериализован с теми же опциями, иначе ссылки не восстановятся корректно
 
         string folder_path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder_name);
 
@@ -160,7 +161,7 @@ public class GenMap
     public GenMap(bool force_regen = false)
     {
         string path = @"rule.json";
-        rule_map = RuleMap.LoadFromFile(path);
+        rule_map = RuleMap.LoadFromFile(path); //FIX: LoadFromFile может выбросить FileNotFoundException или JsonException - не обрабатывается
 
         if (!force_regen && LoadGraph())
             return;

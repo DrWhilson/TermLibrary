@@ -28,8 +28,6 @@ public class Node
         links.Remove(neighbour);
     }
 
-    public Node() { }
-
     public Node(string new_name)
     {
         name = new_name;

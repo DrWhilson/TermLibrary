@@ -23,7 +23,7 @@ public class HexRoom : Node
 
     public void AddNeighbour(HexCorridor new_neighbour)
     {
-        if (new_neighbour.name != "HexCorridor")
+        if (new_neighbour.name != "HexCorridor" || flat_neighbors.Contains(new_neighbour))
             return;
 
         for (int i = 0; i < flat_neighbors.Length; i++)
@@ -39,7 +39,7 @@ public class HexRoom : Node
         if (new_neighbour.name != "HexRoom" || GetNextRooms().Contains(new_neighbour))
             return;
 
-        HexCorridor conection_corridor = new HexCorridor();
+        HexCorridor conection_corridor = new HexCorridor(); //FIX: Создаёт коридор с id=-1 (placeholder), теряется уникальность идентификаторов
 
         this.AddNeighbour(conection_corridor);
         new_neighbour.AddNeighbour(conection_corridor);

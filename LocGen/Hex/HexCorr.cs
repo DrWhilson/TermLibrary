@@ -22,7 +22,7 @@ public class HexCorridor : Node
 
     public void AddNeighbour(HexRoom new_neighbour)
     {
-        if (new_neighbour.name != "HexRoom")
+        if (new_neighbour.name != "HexRoom" || lineal_neighbours.Contains(new_neighbour))
             return;
 
         for (int i = 0; i < lineal_neighbours.Length; i++)
@@ -33,7 +33,7 @@ public class HexCorridor : Node
             }
     }
 
-    public HexRoom GetOpositRoom(HexRoom start_room)
+    public HexRoom? GetOpositRoom(HexRoom start_room)
     {
         return lineal_neighbours.FirstOrDefault(val => val != start_room);
     }
