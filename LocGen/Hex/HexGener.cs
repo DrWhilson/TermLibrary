@@ -25,7 +25,7 @@ class HexGener
                 new_cycle_rooms[j].AddNeighbour(new_cycle_rooms[(j + 1) % num_new_rooms]);
 
             // ==Connect circles==
-            if (outer_nodes.Contains(base_room))
+            if (outer_nodes.Contains(base_room)) // Initial Connect
             {
                 foreach (HexRoom room in new_cycle_rooms)
                     base_room.AddNeighbour(room);
@@ -36,9 +36,9 @@ class HexGener
 
             for (int j = 0; j < num_new_rooms; j++)
             {
-                new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex)]);
+                new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex)]); //FIX: Индекс j - (j / step_btw_hex) может выйти за границы outer_nodes при j < step_btw_hex
                 if (j % step_btw_hex != 0)
-                    new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex) - 1]);
+                    new_cycle_rooms[j].AddNeighbour(outer_nodes[j - (j / step_btw_hex) - 1]); //FIX: Индекс может стать отрицательным (-1) при j < step_btw_hex
             }
 
             // ==Redefine outer_nodes==
@@ -60,7 +60,7 @@ class HexGener
 
     private static List<HexRoom> DeepSearch(List<HexRoom> cur_layer, HashSet<HexRoom> visited_nodes)
     {
-        foreach (HexRoom room in cur_layer)
+        foreach (HexRoom room in cur_layer.ToList()) //FIX: Модификация cur_layer (AddRange) внутри foreach по той же коллекции вызовет InvalidOperationException
         {
             List<HexRoom> new_rooms = room.GetNextRooms()
                 .Where(r => !visited_nodes.Contains(r))
@@ -70,9 +70,9 @@ class HexGener
             visited_nodes.UnionWith(new_rooms);
         }
 
-        if (cur_layer == null)
+        if (cur_layer == null) //FIX: cur_layer никогда не будет null после foreach, проверка бесполезна
             return visited_nodes.ToList();
-        return DeepSearch(cur_layer, visited_nodes);
+        return DeepSearch(cur_layer, visited_nodes); //FIX: Рекурсия не имеет условия выхода кроме null, приведёт к StackOverflow - cur_layer только растёт
     }
 
     private static void ConectLayers(HexRoom base_room_1, HexRoom base_room_2)
@@ -109,7 +109,7 @@ class HexGener
 
     public static void GenerateLevel()
     {
-        int num_layers = Random.Shared.Next(1, 15);
+        int num_layers = Random.Shared.Next(8, 15);
         HexRoom base_room = GenerateLayers(num_layers);
     }
 }
