@@ -51,14 +51,15 @@ class HexGener
     {
         HashSet<HexRoom> visited_nodes = [base_node];
 
-        List<HexRoom> curr_layer = [base_node];
-
-        DeepSearch(curr_layer, visited_nodes);
+        DeepSearch(base_node, visited_nodes);
 
         return visited_nodes.ToList();
     }
 
-    private static List<HexRoom> DeepSearch(List<HexRoom> cur_layer, HashSet<HexRoom> visited_nodes)
+    private static List<HexRoom> DeepSearchByLayer(
+        List<HexRoom> cur_layer,
+        HashSet<HexRoom> visited_nodes
+    )
     {
         foreach (HexRoom room in cur_layer.ToList()) //FIX: Модификация cur_layer (AddRange) внутри foreach по той же коллекции вызовет InvalidOperationException
         {
@@ -72,7 +73,22 @@ class HexGener
 
         if (cur_layer == null) //FIX: cur_layer никогда не будет null после foreach, проверка бесполезна
             return visited_nodes.ToList();
-        return DeepSearch(cur_layer, visited_nodes); //FIX: Рекурсия не имеет условия выхода кроме null, приведёт к StackOverflow - cur_layer только растёт
+        return DeepSearchByLayer(cur_layer, visited_nodes); //FIX: Рекурсия не имеет условия выхода кроме null, приведёт к StackOverflow - cur_layer только растёт
+    }
+
+    private static void DeepSearch(HexRoom cur_room, HashSet<HexRoom> visited_nodes)
+    {
+        List<HexRoom> new_rooms = cur_room
+            .GetNextRooms()
+            .Where(r => !visited_nodes.Contains(r))
+            .ToList();
+
+        visited_nodes.UnionWith(new_rooms);
+
+        foreach (HexRoom new_room in new_rooms)
+        {
+            DeepSearch(new_room, visited_nodes);
+        }
     }
 
     private static void ConectLayers(HexRoom base_room_1, HexRoom base_room_2)
